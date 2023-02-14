@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:student_assistant_app/Screens/home.dart';
-import 'package:student_assistant_app/Screens/login.dart';
+import 'package:dep_college_app/Screens/home.dart';
+import 'package:dep_college_app/Screens/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +22,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Student Assistant',
       debugShowCheckedModeBanner: false,
+      // home: LoginScreen(),
       home: LoginScreen(),
       routes: {
         // '/homepage': (ctx) => HomeScreen(),

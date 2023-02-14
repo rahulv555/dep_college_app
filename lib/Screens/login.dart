@@ -2,13 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:student_assistant_app/Screens/calender/models/task.dart';
-import 'package:student_assistant_app/Screens/home.dart';
-import 'package:student_assistant_app/Screens/signup.dart';
-import 'package:student_assistant_app/utilities/constants.dart';
-
-import 'finance/models/transaction.dart' as Trans;
-import 'finance/models/transaction.dart';
+import 'package:dep_college_app/Screens/home.dart';
+import 'package:dep_college_app/Screens/signup.dart';
+import 'package:dep_college_app/utilities/constants.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -152,62 +148,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 .then((DocumentSnapshot doc) {
               if (doc.exists) {
                 _currentUser = doc.data();
-                FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(FirebaseAuth.instance.currentUser?.uid)
-                    .collection('transactions')
-                    .get()
-                    .then((QuerySnapshot qs) {
-                  List<Trans.Transaction> _userTransactions = [];
-                  qs.docs.forEach((doc) {
-                    _userTransactions.add(Trans.Transaction(
-                        amount: doc['amount'],
-                        category: categories[doc['category']] as TransCategory,
-                        date: (doc['date'] as Timestamp).toDate(),
-                        id: doc.id,
-                        title: doc['title']));
-                  });
 
-                 
-
-                  FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(FirebaseAuth.instance.currentUser?.uid)
-                      .collection('tasks')
-                      .get()
-                      .then((QuerySnapshot qs) {
- List<Task> _userEvents= [];
-                  qs.docs.forEach((doc) {
-                    _userEvents.add(Task(
-                       id: doc.id,
-                       title: doc["title"],
-                       note: doc["note"],
-                       isCompleted: doc["isCompleted"],
-                       date: doc["date"],
-                       startTime: doc["startTime"],
-                       endTime: doc["endTime"],
-                       color: doc["color"],
-                       remind: doc["remind"],
-                       repeat: doc["repeat"],
-
-                        ));
-                  });
-
-                        
-                         Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomeScreen(
-                                currentUser: _currentUser,
-                                userTransactions: _userTransactions,
-                                userEvents: _userEvents,
-                              )));
-                  print(_currentUser);
-                  print(_userTransactions);
-
-
-                      });
-                });
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreen(
+                              currentUser: _currentUser,
+                            )));
+                print(_currentUser);
               } else {
                 print('Document does not exist on the database');
               }

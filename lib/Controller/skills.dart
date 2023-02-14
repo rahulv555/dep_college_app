@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:student_assistant_app/utilities/Skill.dart';
+import 'package:dep_college_app/utilities/Skill.dart';
 
 class AppDataController extends GetxController{
   List<SkillModel> skillData=[];

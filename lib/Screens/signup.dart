@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:student_assistant_app/Screens/details.dart';
-import 'package:student_assistant_app/utilities/constants.dart';
+import 'package:dep_college_app/Screens/details.dart';
+import 'package:dep_college_app/utilities/constants.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
