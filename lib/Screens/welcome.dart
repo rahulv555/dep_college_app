@@ -9,7 +9,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  double _size = 0;
+  double _size = 300;
 
   void _updateSize() {
     if (_size == 300)
@@ -26,37 +26,37 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme.of(context).primaryColor,
         body: Center(
           widthFactor: double.infinity,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AnimatedTextKit(
-                animatedTexts: [
-                  WavyAnimatedText(
-                    'Welcome to',
-                    textStyle: TextStyle(
-                      fontSize: 32.0,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
-                      fontFamily: 'Times',
-                    ),
-                  ),
-                ],
-                isRepeatingAnimation: false,
+              // AnimatedTextKit(
+              //   animatedTexts: [
+              //     WavyAnimatedText(
+              //       'Welcome to',
+              //       textStyle: TextStyle(
+              //         fontSize: 32.0,
+              //         fontWeight: FontWeight.bold,
+              //         color: Theme.of(context).primaryColor,
+              //         fontFamily: 'Times',
+              //       ),
+              //     ),
+              //   ],
+              //   isRepeatingAnimation: false,
 
-                onFinished: () => _updateSize(),
-                // totalRepeatCount: 4,
-                pause: const Duration(milliseconds: 1),
-                // displayFullTextOnTap: true,
-                // stopPauseOnTap: true,
-              ),
+              //   onFinished: () => _updateSize(),
+              //   // totalRepeatCount: 4,
+              //   pause: const Duration(milliseconds: 1),
+              //   // displayFullTextOnTap: true,
+              //   // stopPauseOnTap: true,
+              // ),
               AnimatedSize(
                 curve: Curves.easeIn,
                 duration: Duration(milliseconds: 1500),
                 child: Image.asset(
-                  'assets/images/bitebuddy_black.png',
+                  'assets/images/bitebuddy_cream.png',
                   height: _size,
                   width: _size,
                 ),

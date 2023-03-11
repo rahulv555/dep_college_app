@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dep_college_app/Screens/buy_and_sell/main.dart';
 import 'package:dep_college_app/Screens/coupon_exchange/main.dart';
 import 'package:dep_college_app/Screens/food_order/main.dart';
@@ -18,6 +19,7 @@ import 'maindrawer.dart';
 
 class HomeScreen extends StatefulWidget {
   var _currentUser;
+  List<Coupon> _coupons = [];
   String appBarTitle = "BiteBuddy";
   HomeScreen({currentUser}) {
     this._currentUser = currentUser;
@@ -41,27 +43,61 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = WelcomeScreen(); // Our first view in viewport
 
-  void _changeTab(number) {
-    setState(() {
-      currentTab = number;
-      switch (currentTab) {
-        case 0:
-          currentScreen = CouponHome(widget._currentUser, _changeAppBarTitle);
-          break;
-        case 1:
-          currentScreen = FoodHome(_changeAppBarTitle);
-          break;
-        case 2:
-          currentScreen = OrdersHome(_changeAppBarTitle);
-      }
-      ; // if user taps on this dashboard tab will be active
-    });
-  }
-
   void _changeAppBarTitle(String text) {
     setState(() {
       widget.appBarTitle = text;
     });
+  }
+
+  Map<Meal, String> meal_to_string = {
+    Meal.breakfast: 'Breakfast',
+    Meal.lunch: 'Lunch',
+    Meal.dinner: 'Dinner',
+    Meal.full: 'Full day',
+  };
+
+  void _changeTab(number) {
+    if (number == 0) {
+      List<Coupon> c = [];
+      FirebaseFirestore.instance
+          .collection('coupons')
+          .get()
+          .then((QuerySnapshot qs) {
+        qs.docs.forEach((doc) {
+          print(doc);
+          c.add(Coupon(
+              cost: double.parse(doc['cost']),
+              discount: 0,
+              dov: (doc['dov'] as Timestamp).toDate(),
+              id: doc.id,
+              phonenumber: doc['phonenumber'],
+              quantity: 1,
+              seller: doc['seller'],
+              type: meal_to_string.inverse[doc['type']] as Meal,
+              vendor:
+                  doc['vendor'] == 'Bhopal' ? Vendor.bhopal : Vendor.kanaka));
+        });
+
+        // print('lol');
+        // print(c);
+
+        setState(() {
+          widget._coupons = c;
+          currentTab = number;
+          print(number);
+          print(c);
+          currentScreen = CouponHome(
+              widget._currentUser, _changeAppBarTitle, widget._coupons);
+          ; // if user taps on this dashboard tab will be active
+        });
+      });
+    } else if (number == 1) {
+      currentTab = number;
+      currentScreen = FoodHome(_changeAppBarTitle);
+    } else {
+      currentTab = number;
+      currentScreen = OrdersHome(_changeAppBarTitle);
+    }
   }
 
   @override

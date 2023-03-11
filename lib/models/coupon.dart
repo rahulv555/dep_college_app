@@ -7,8 +7,10 @@ class Coupon {
   final double discount;
   final DateTime dov;
   final Meal type;
+  final String id;
 
   Coupon({
+    required this.id,
     required this.vendor,
     required this.cost,
     required this.quantity,
@@ -29,6 +31,7 @@ enum Meal {
   breakfast,
   lunch,
   dinner,
+  full,
 }
 
 extension InvertMap<K, V> on Map<K, V> {

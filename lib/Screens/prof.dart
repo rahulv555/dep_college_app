@@ -13,7 +13,10 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(actions: []),
+      appBar: AppBar(
+        actions: [],
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: SingleChildScrollView(
           child: Column(
         children: [

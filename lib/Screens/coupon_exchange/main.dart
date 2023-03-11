@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dep_college_app/Screens/coupon_exchange/edit_coupon.dart';
 import 'package:dep_college_app/Screens/coupon_exchange/selectview.dart';
 import 'package:dep_college_app/Screens/searchbar.dart';
 import 'package:dep_college_app/models/coupon.dart';
@@ -9,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
+import './delete_alert.dart';
 
 import 'sell_coupon.dart';
 
@@ -17,28 +20,9 @@ class CouponHome extends StatefulWidget {
   var _currentUser;
   Function _changeAppBarTitle;
 
-  CouponHome(this._currentUser, this._changeAppBarTitle) {
+  CouponHome(this._currentUser, this._changeAppBarTitle, this.coupons) {
     _changeAppBarTitle('Coupons');
-    coupons = [
-      Coupon(
-          cost: 51,
-          discount: 23,
-          dov: DateTime.now(),
-          phonenumber: "92038982103",
-          quantity: 2,
-          seller: 'dsfsdfdsfd',
-          vendor: Vendor.bhopal,
-          type: Meal.breakfast),
-      Coupon(
-          cost: 322,
-          discount: 13,
-          dov: DateTime.now(),
-          phonenumber: "92038222103",
-          quantity: 1,
-          seller: 'asdasdasdasd',
-          vendor: Vendor.kanaka,
-          type: Meal.dinner),
-    ];
+
     print("Coupons");
   }
 
@@ -51,6 +35,7 @@ class _CouponHomeState extends State<CouponHome> {
     Meal.breakfast: 'Breakfast',
     Meal.lunch: 'Lunch',
     Meal.dinner: 'Dinner',
+    Meal.full: 'Full day',
   };
   int _selectedView = 0;
   List<String> _image = [
@@ -75,17 +60,86 @@ class _CouponHomeState extends State<CouponHome> {
     Vendor v = vendor == 'Bhopal' ? Vendor.bhopal : Vendor.kanaka;
 
     Meal type = meal_to_string.inverse[meal] as Meal;
-    setState(() {
-      widget.coupons.add(Coupon(
-          cost: double.parse(cost),
-          discount: 0,
-          dov: dov,
-          quantity: 1,
-          type: type,
-          phonenumber: widget._currentUser['Phonenumber'],
-          seller: FirebaseAuth.instance.currentUser?.uid as String,
-          vendor: v));
+
+    FirebaseFirestore.instance.collection('coupons').add({
+      'cost': cost,
+      'discount': 0,
+      'dov': Timestamp.fromDate(dov),
+      'type': meal,
+      'phonenumber': widget._currentUser['Phonenumber'],
+      'quantity': 1,
+      'seller': FirebaseAuth.instance.currentUser?.uid,
+      'vendor': vendor,
+    }).then((value) {
+      setState(() {
+        widget.coupons.add(Coupon(
+            id: value.id,
+            cost: double.parse(cost),
+            discount: 0,
+            dov: dov,
+            quantity: 1,
+            type: type,
+            phonenumber: widget._currentUser['Phonenumber'],
+            seller: FirebaseAuth.instance.currentUser?.uid as String,
+            vendor: v));
+      });
+      return;
     });
+  }
+
+  void _editCoupon(
+      String cost, String date, String meal, String vendor, int index) {
+    Navigator.pop(context);
+    DateTime dov = DateTime.now();
+    switch (date) {
+      case 'Today':
+        break;
+      case 'Tomorrow':
+        dov = DateTime.now().add(Duration(days: 1));
+        break;
+      case 'Day after tomorrow':
+        dov = DateTime.now().add(Duration(days: 2));
+        break;
+    }
+
+    Vendor v = vendor == 'Bhopal' ? Vendor.bhopal : Vendor.kanaka;
+    String id = widget.coupons[index].id;
+
+    Meal type = meal_to_string.inverse[meal] as Meal;
+
+    FirebaseFirestore.instance.collection('coupons').doc(id).update({
+      'cost': cost,
+      'discount': 0,
+      'dov': Timestamp.fromDate(dov),
+      'type': meal,
+      'phonenumber': widget._currentUser['Phonenumber'],
+      'quantity': 1,
+      'seller': FirebaseAuth.instance.currentUser?.uid,
+      'vendor': vendor,
+    }).then((value) {
+      setState(() {
+        widget.coupons[index] = Coupon(
+            id: id,
+            cost: double.parse(cost),
+            discount: 0,
+            dov: dov,
+            quantity: 1,
+            type: type,
+            phonenumber: widget._currentUser['Phonenumber'],
+            seller: FirebaseAuth.instance.currentUser?.uid as String,
+            vendor: v);
+      });
+      return;
+    });
+  }
+
+  void _deleteCoupon(int index) {
+    String id = widget.coupons[index].id;
+    setState(() {
+      widget.coupons.removeAt(index);
+    });
+
+    FirebaseFirestore.instance.collection('coupons').doc(id).delete();
   }
 
   void _sellCouponSheet(BuildContext ctx) {
@@ -109,7 +163,7 @@ class _CouponHomeState extends State<CouponHome> {
           return GestureDetector(
             onTap: () {},
             behavior: HitTestBehavior.opaque,
-            child: SellCoupon(_addCoupon),
+            child: EditCoupon(_editCoupon, index, widget.coupons[index]),
           );
         });
   }
@@ -143,6 +197,7 @@ class _CouponHomeState extends State<CouponHome> {
             SelectView(_updateSelectedView),
             SearchBar(),
             Container(
+                height: 600,
                 child: _selectedView == 0
                     ? ListView.builder(
                         scrollDirection: Axis.vertical,
@@ -209,7 +264,8 @@ class _CouponHomeState extends State<CouponHome> {
                                       ),
                                     ),
                                     Container(
-                                      padding: EdgeInsets.only(top: 7),
+                                      padding:
+                                          EdgeInsets.only(top: 7, left: 10),
                                       child: Column(
                                         children: [
                                           Text(
@@ -315,7 +371,8 @@ class _CouponHomeState extends State<CouponHome> {
                                         ),
                                       ),
                                       Container(
-                                        padding: EdgeInsets.only(top: 7),
+                                        padding:
+                                            EdgeInsets.only(top: 7, left: 1),
                                         child: Column(
                                           children: [
                                             Text(
@@ -324,16 +381,32 @@ class _CouponHomeState extends State<CouponHome> {
                                                   color: Color(greenColor),
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            IconButton(
-                                                onPressed: () {
-                                                  _editCouponSheet(ctx, index);
-                                                },
-                                                splashRadius: 20,
-                                                icon: Icon(
-                                                  Icons.edit,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                )),
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                    onPressed: () {
+                                                      showMyDialog(context,
+                                                          index, _deleteCoupon);
+                                                    },
+                                                    splashRadius: 20,
+                                                    icon: Icon(
+                                                      Icons.delete_forever,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                    )),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      _editCouponSheet(
+                                                          ctx, index);
+                                                    },
+                                                    splashRadius: 20,
+                                                    icon: Icon(
+                                                      Icons.edit,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                    )),
+                                              ],
+                                            ),
                                           ],
                                         ),
                                       )
