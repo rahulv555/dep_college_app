@@ -4,9 +4,7 @@ import 'package:dep_college_app/Screens/food_order/main.dart';
 import 'package:dep_college_app/Screens/login.dart';
 import 'package:dep_college_app/Screens/orders/main.dart';
 import 'package:dep_college_app/Screens/prof.dart';
-import 'package:dep_college_app/Screens/welcome.dart';
 import 'package:dep_college_app/models/coupon.dart';
-import 'package:dep_college_app/utilities/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +16,6 @@ import 'maindrawer.dart';
 
 class HomeScreen extends StatefulWidget {
   var _currentUser;
-  String appBarTitle = "BiteBuddy";
   HomeScreen({currentUser}) {
     this._currentUser = currentUser;
   }
@@ -28,88 +25,46 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int currentTab = -1; // to keep track of active tab index
+  int currentTab = 0; // to keep track of active tab index
 
   List<int> tabColor = [0XFFFEFEE2, 0XFFFEFEE2, 0XFFFEFEE2, 0XFFFEFEE2];
 
-  // final List<Widget> screens = [
-  //   CouponHome(._currentUser),
-  //   FoodHome(),
-  //   OrdersHome(),
-  //   BuySellHome(),
-  // ]; // to store nested tabs
+  final List<Widget> screens = [
+    CouponHome(),
+    FoodHome(),
+    OrdersHome(),
+    BuySellHome(),
+  ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = WelcomeScreen(); // Our first view in viewport
+  Widget currentScreen = CouponHome(); // Our first view in viewport
 
   void _changeTab(number) {
     setState(() {
       currentTab = number;
-      switch (currentTab) {
-        case 0:
-          currentScreen = CouponHome(widget._currentUser, _changeAppBarTitle);
-          break;
-        case 1:
-          currentScreen = FoodHome(_changeAppBarTitle);
-          break;
-        case 2:
-          currentScreen = OrdersHome(_changeAppBarTitle);
-      }
-      ; // if user taps on this dashboard tab will be active
-    });
-  }
-
-  void _changeAppBarTitle(String text) {
-    setState(() {
-      widget.appBarTitle = text;
+      currentScreen = screens[
+          currentTab]; // if user taps on this dashboard tab will be active
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            toolbarHeight: 70,
-            leading: Builder(
-              builder: (BuildContext context) {
-                return IconButton(
-                  iconSize: 100,
-                  icon: ImageIcon(
-                    AssetImage('assets/images/bitebuddy_cream.png'),
-                    size: 100,
-                  ),
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                  tooltip:
-                      MaterialLocalizations.of(context).openAppDrawerTooltip,
+        appBar: AppBar(title: Text("Useful App"), actions: [
+          ElevatedButton(
+            child: Text("Logout"),
+            onPressed: () {
+              FirebaseAuth.instance.signOut().then((value) {
+                print("Signed Out");
+                Navigator.popUntil(
+                  context,
+                  ModalRoute.withName('/login'),
                 );
-              },
-            ),
-            title:
-                Text(widget.appBarTitle, style: TextStyle(color: creamColor)),
-            backgroundColor: Theme.of(context).primaryColor,
-            actions: [
-              ElevatedButton(
-                child: Text(
-                  "Logout",
-                  style: TextStyle(color: creamColor),
-                ),
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStatePropertyAll(Color(greenColor))),
-                onPressed: () {
-                  FirebaseAuth.instance.signOut().then((value) {
-                    print("Signed Out");
-                    Navigator.popUntil(
-                      context,
-                      ModalRoute.withName('/login'),
-                    );
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()));
-                  });
-                },
-              ),
-            ]),
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+              });
+            },
+          ),
+        ]),
         body: PageStorage(
           child: currentScreen,
           bucket: bucket,
@@ -121,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
         //   },
         // ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
         drawer: MainDrawer(widget._currentUser),
         bottomNavigationBar: BottomAppBar(
             color: Color(0xFF5F995E),
@@ -154,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   : Colors.grey[450],
                             ),
                             Text(
-                              'Coupons',
+                              'Orders',
                               style: TextStyle(
                                 color: currentTab == 0
                                     ? Color(tabColor[0])
@@ -174,14 +128,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Icon(
-                              Icons.food_bank_outlined,
+                              Icons.list_alt,
                               size: 35,
                               color: currentTab == 1
                                   ? Color(tabColor[1])
                                   : Colors.grey[450],
                             ),
                             Text(
-                              'Food',
+                              'Menu',
                               style: TextStyle(
                                 color: currentTab == 1
                                     ? Color(tabColor[1])
@@ -201,14 +155,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Icon(
-                              Icons.blinds_closed,
+                              Icons.history,
                               size: 35,
                               color: currentTab == 2
                                   ? Color(tabColor[2])
                                   : Colors.grey[450],
                             ),
                             Text(
-                              'Orders',
+                              'History',
                               style: TextStyle(
                                 color: currentTab == 2
                                     ? Color(tabColor[2])

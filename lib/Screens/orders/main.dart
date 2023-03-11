@@ -3,7 +3,10 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class OrdersHome extends StatefulWidget {
-  const OrdersHome({super.key});
+  Function _changeAppBarTitle;
+  OrdersHome(this._changeAppBarTitle) {
+    _changeAppBarTitle('Orders');
+  }
 
   @override
   State<OrdersHome> createState() => _OrdersHomeState();

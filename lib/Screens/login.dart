@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dep_college_app/utilities/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
             controller: _email,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
-              color: Colors.white,
+              color: Color(0xFFBDBDBD),
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -41,10 +42,10 @@ class _LoginScreenState extends State<LoginScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.email,
-                color: Colors.white,
+                color: Color(0xFFBDBDBD),
               ),
               hintText: 'Enter your Email',
-              hintStyle: kHintTextStyle,
+              hintStyle: kHintTextStyleGreyed,
             ),
           ),
         ),
@@ -69,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
             controller: _pass,
             obscureText: true,
             style: TextStyle(
-              color: Colors.white,
+              color: Color(0xFFBDBDBD),
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -77,10 +78,10 @@ class _LoginScreenState extends State<LoginScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.lock,
-                color: Colors.white,
+                color: Color(0xFFBDBDBD),
               ),
               hintText: 'Enter your Password',
-              hintStyle: kHintTextStyle,
+              hintStyle: kHintTextStyleGreyed,
             ),
           ),
         ),
@@ -110,11 +111,11 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Row(
         children: <Widget>[
           Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
+            data: ThemeData(unselectedWidgetColor: Color(0xFFF6F6F6)),
             child: Checkbox(
               value: _rememberMe,
               checkColor: Colors.green,
-              activeColor: Colors.white,
+              activeColor: Color.fromRGBO(250, 250, 250, 1),
               onChanged: (value) {
                 setState(() {
                   _rememberMe = value!;
@@ -170,12 +171,12 @@ class _LoginScreenState extends State<LoginScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Color(greenColor),
         ),
         child: Text(
-          'LOGIN',
+          'Sign In',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: Colors.white,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -248,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextSpan(
               text: 'Don\'t have an Account? ',
               style: TextStyle(
-                color: Colors.white,
+                color: Color(greenColor),
                 fontSize: 18.0,
                 fontWeight: FontWeight.w400,
               ),
@@ -256,7 +257,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextSpan(
               text: 'Sign Up',
               style: TextStyle(
-                color: Colors.white,
+                color: Color(greenColor),
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -301,10 +302,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Color(0xFF73AEF5),
-                      Color(0xFF61A4F1),
-                      Color(0xFF478DE0),
-                      Color(0xFF398AE5),
+                      creamColor,
+                      creamColor,
+                      creamColor,
+                      creamColor,
+                      // Color(0xFF61A4F1),
+                      // Color(0xFF478DE0),
+                      // Color(0xFF398AE5),
                     ],
                     stops: [0.1, 0.4, 0.7, 0.9],
                   ),
@@ -324,7 +328,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text(
                         'Sign In',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontFamily: 'OpenSans',
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
@@ -336,11 +340,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 30.0,
                       ),
                       _buildPasswordTF(),
-                      _buildForgotPasswordBtn(),
-                      _buildRememberMeCheckbox(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildRememberMeCheckbox(),
+                          _buildForgotPasswordBtn(),
+                        ],
+                      ),
+
                       _buildLoginBtn(),
-                      _buildSignInWithText(),
-                      _buildSocialBtnRow(),
+                      // _buildSignInWithText(),
+                      // _buildSocialBtnRow(),
                       _buildSignupBtn(),
                     ],
                   ),
