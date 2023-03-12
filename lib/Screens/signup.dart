@@ -39,7 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.email,
-                color: Colors.white,
+                color: Theme.of(context).primaryColor,
               ),
               hintText: 'Enter your Email',
               hintStyle: kHintTextStyle,
@@ -55,7 +55,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Set up you Password',
+          'Set up your Password',
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
@@ -75,7 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.lock,
-                color: Colors.white,
+                color: Theme.of(context).primaryColor,
               ),
               hintText: 'Enter your Password',
               hintStyle: kHintTextStyle,
@@ -202,10 +202,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Color(0xFF73AEF5),
-                      Color(0xFF61A4F1),
-                      Color(0xFF478DE0),
-                      Color(0xFF398AE5),
+                      Theme.of(context).backgroundColor,
+                      Theme.of(context).backgroundColor,
+                      Theme.of(context).backgroundColor,
+                      Theme.of(context).backgroundColor
                     ],
                     stops: [0.1, 0.4, 0.7, 0.9],
                   ),
@@ -223,9 +223,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Sign In',
+                        'Sign Up',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).primaryColor,
                           fontFamily: 'OpenSans',
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
@@ -240,8 +240,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       //_buildForgotPasswordBtn(),
                       //_buildRememberMeCheckbox(),
                       _buildSignUpBtn(),
-                      _buildSignInWithText(),
-                      _buildSocialBtnRow(),
+                      // _buildSignInWithText(),
+                      // _buildSocialBtnRow(),
                       // _buildSignupBtn(),
                     ],
                   ),

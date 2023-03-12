@@ -57,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
   };
 
   void _changeTab(number) {
+    //COUPON TAB LOADING
     if (number == 0) {
       List<Coupon> c = [];
       FirebaseFirestore.instance
@@ -65,17 +66,30 @@ class _HomeScreenState extends State<HomeScreen> {
           .then((QuerySnapshot qs) {
         qs.docs.forEach((doc) {
           print(doc);
-          c.add(Coupon(
-              cost: double.parse(doc['cost']),
-              discount: 0,
-              dov: (doc['dov'] as Timestamp).toDate(),
-              id: doc.id,
-              phonenumber: doc['phonenumber'],
-              quantity: 1,
-              seller: doc['seller'],
-              type: meal_to_string.inverse[doc['type']] as Meal,
-              vendor:
-                  doc['vendor'] == 'Bhopal' ? Vendor.bhopal : Vendor.kanaka));
+          if ((doc['dov'] as Timestamp)
+                  .toDate()
+                  .difference(DateTime.now())
+                  .inDays <=
+              -1) {
+            //delete
+            FirebaseFirestore.instance
+                .collection('coupons')
+                .doc(doc.id)
+                .delete()
+                .then((value) => print("deleted"));
+          } else {
+            c.add(Coupon(
+                cost: double.parse(doc['cost']),
+                discount: 0,
+                dov: (doc['dov'] as Timestamp).toDate(),
+                id: doc.id,
+                phonenumber: doc['phonenumber'],
+                quantity: 1,
+                seller: doc['seller'],
+                type: meal_to_string.inverse[doc['type']] as Meal,
+                vendor:
+                    doc['vendor'] == 'Bhopal' ? Vendor.bhopal : Vendor.kanaka));
+          }
         });
 
         // print('lol');

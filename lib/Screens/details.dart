@@ -330,10 +330,10 @@ class _DetailsState extends State<Details> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Color(0xFF73AEF5),
-                      Color(0xFF61A4F1),
-                      Color(0xFF478DE0),
-                      Color(0xFF398AE5),
+                      Theme.of(context).backgroundColor,
+                      Theme.of(context).backgroundColor,
+                      Theme.of(context).backgroundColor,
+                      Theme.of(context).backgroundColor
                     ],
                     stops: [0.1, 0.4, 0.7, 0.9],
                   ),
@@ -353,7 +353,7 @@ class _DetailsState extends State<Details> {
                       Text(
                         'Fill Your Details',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).primaryColor,
                           fontFamily: 'OpenSans',
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
