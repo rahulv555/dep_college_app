@@ -1,6 +1,11 @@
+import 'package:dep_college_app/Screens/coupon_exchange/filter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_filter_dialog/flutter_filter_dialog.dart';
 
 class SearchBar extends StatefulWidget {
+  Function _filterCoupons;
+  SearchBar(this._filterCoupons);
+
   @override
   State<SearchBar> createState() => _SearchBarState();
 }
@@ -33,9 +38,13 @@ class _SearchBarState extends State<SearchBar> {
                     ),
                     suffixIcon: IconButton(
                       iconSize: 20,
-                      onPressed: (() {
-                        print('filter');
-                      }),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    FilterCoupons(widget._filterCoupons)));
+                      },
                       splashRadius: 1,
                       icon: Icon(
                         Icons.filter_alt_rounded,

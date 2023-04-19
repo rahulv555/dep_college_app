@@ -53,6 +53,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               //   // stopPauseOnTap: true,
               // ),
               AnimatedSize(
+                
                 curve: Curves.easeIn,
                 duration: Duration(milliseconds: 1500),
                 child: Image.asset(

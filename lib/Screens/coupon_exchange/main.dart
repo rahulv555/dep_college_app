@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dep_college_app/Screens/coupon_exchange/edit_coupon.dart';
 import 'package:dep_college_app/Screens/coupon_exchange/selectview.dart';
-import 'package:dep_college_app/Screens/searchbar.dart';
+import 'package:dep_college_app/Screens/coupon_exchange/searchbar.dart';
 import 'package:dep_college_app/models/coupon.dart';
 import 'package:dep_college_app/utilities/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -174,6 +174,10 @@ class _CouponHomeState extends State<CouponHome> {
     });
   }
 
+  void _filterCoupon(List<String> options) {
+    ;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -195,7 +199,7 @@ class _CouponHomeState extends State<CouponHome> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SelectView(_updateSelectedView),
-            SearchBar(),
+            SearchBar(_filterCoupon),
             Container(
                 height: 600,
                 child: _selectedView == 0
