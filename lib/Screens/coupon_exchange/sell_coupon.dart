@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../models/coupon.dart';
 import '../../utilities/constants.dart';
@@ -79,9 +80,7 @@ class _SellCouponState extends State<SellCoupon> {
                       },
                       value: selectedVendor,
                       dropdownColor: Theme.of(context).primaryColor,
-                      style: TextStyle(
-                          color: Theme.of(context).backgroundColor,
-                          fontFamily: 'OpenSans'),
+                      style: TextStyle(color: Theme.of(context).backgroundColor, fontFamily: 'OpenSans'),
                       // Down Arrow Icon
                       icon: Icon(
                         Icons.keyboard_arrow_down,
@@ -97,9 +96,7 @@ class _SellCouponState extends State<SellCoupon> {
               ),
               TextField(
                 style: TextStyle(color: Theme.of(context).primaryColor),
-                decoration: InputDecoration(
-                    labelText: 'Cost',
-                    focusColor: Theme.of(context).primaryColor),
+                decoration: InputDecoration(labelText: 'Cost', focusColor: Theme.of(context).primaryColor),
                 controller: _costController,
               ),
               SizedBox(
@@ -142,8 +139,7 @@ class _SellCouponState extends State<SellCoupon> {
                       },
                       value: selectedMeal,
                       dropdownColor: Theme.of(context).primaryColor,
-                      style: const TextStyle(
-                          color: Colors.white, fontFamily: 'OpenSans'),
+                      style: const TextStyle(color: Colors.white, fontFamily: 'OpenSans'),
                       // Down Arrow Icon
                       icon: const Icon(
                         Icons.keyboard_arrow_down,
@@ -193,8 +189,7 @@ class _SellCouponState extends State<SellCoupon> {
                       },
                       value: selectedDate,
                       dropdownColor: Theme.of(context).primaryColor,
-                      style: const TextStyle(
-                          color: Colors.white, fontFamily: 'OpenSans'),
+                      style: const TextStyle(color: Colors.white, fontFamily: 'OpenSans'),
                       // Down Arrow Icon
                       icon: const Icon(
                         Icons.keyboard_arrow_down,
@@ -210,13 +205,13 @@ class _SellCouponState extends State<SellCoupon> {
               ),
               TextButton(
                 onPressed: () {
+                  if (_costController.text != "" && _costController.text.isNumericOnly) {
+                    widget._addCoupon(_costController.text, selectedDate, selectedMeal, selectedVendor);
+                  }
                   // widget.addTx(
                   //     titleController.text,
                   //     double.parse(amountController.text),
                   //     categories[selectedCategory]);
-                  widget._addCoupon(_costController.text, selectedDate,
-                      selectedMeal, selectedVendor);
-                  
                 },
                 child: Text(
                   'Add Coupon',

@@ -21,9 +21,10 @@ class CouponHome extends StatefulWidget {
   Function _changeAppBarTitle;
 
   CouponHome(this._currentUser, this._changeAppBarTitle, this.coupons) {
+    
     _changeAppBarTitle('Coupons');
-
     print("Coupons");
+
   }
 
   @override

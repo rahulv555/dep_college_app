@@ -4,7 +4,8 @@ class FoodHomePage extends StatefulWidget {
   Function _selectOutlet;
   Function _selectView;
   Function _changeAppBarTitle;
-  FoodHomePage(this._selectOutlet, this._selectView, this._changeAppBarTitle) {
+  
+  FoodHomePage(this._selectOutlet, this._selectView, this._changeAppBarTitle, ) {
     // this._changeAppBarTitle('Food');
   }
 
@@ -22,7 +23,7 @@ class _FoodHomePageState extends State<FoodHomePage> {
   ];
 
   final List<String> _outlet_names = [
-    'CAFETARIA',
+    'CANTEEN',
     'HOTSPOT',
     'JUICE CORNER',
     'KERALA CANTEEN',
