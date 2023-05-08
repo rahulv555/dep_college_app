@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dep_college_app/Screens/Chat/chat_main.dart';
 import 'package:dep_college_app/Screens/coupon_exchange/edit_coupon.dart';
 import 'package:dep_college_app/Screens/coupon_exchange/selectview.dart';
 import 'package:dep_college_app/Screens/coupon_exchange/searchbar.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 import './delete_alert.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 import 'sell_coupon.dart';
 
@@ -21,10 +23,8 @@ class CouponHome extends StatefulWidget {
   Function _changeAppBarTitle;
 
   CouponHome(this._currentUser, this._changeAppBarTitle, this.coupons) {
-    
     _changeAppBarTitle('Coupons');
     print("Coupons");
-
   }
 
   @override
@@ -280,7 +280,20 @@ class _CouponHomeState extends State<CouponHome> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           IconButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                //final room = await FirebaseChatCore.instance.createRoom(widget.coupons[index].seller);
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (ctx) =>
+                                                            ChatScreen(
+                                                                widget
+                                                                    ._currentUser,
+                                                                widget
+                                                                    .coupons[
+                                                                        index]
+                                                                    .seller)));
+                                              },
                                               splashRadius: 20,
                                               icon: Icon(
                                                 Icons.chat_bubble,

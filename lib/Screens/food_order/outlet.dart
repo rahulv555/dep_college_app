@@ -17,8 +17,17 @@ class OutletMenu extends StatefulWidget {
     'COFFEE DAY',
   ];
 
-  OutletMenu(this._selectedOutlet, this._selectView, this._changeAppBarTitle, this._menu) {
+  OutletMenu(this._selectedOutlet, this._selectView, this._changeAppBarTitle,
+      this._menu) {
     print(this._menu.length);
+
+    this._menu.forEach((key, value) {
+      print(key);
+      value.forEach((element) {
+        print(element.name);
+      });
+    });
+
     // this._changeAppBarTitle(_outlet_names[_selectedOutlet]);
   }
 
@@ -68,7 +77,8 @@ class _OutletMenuState extends State<OutletMenu> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             category,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                         ),
                         ListView.builder(
@@ -78,95 +88,162 @@ class _OutletMenuState extends State<OutletMenu> {
                             itemCount: widget._menu[category]!.length,
                             itemBuilder: (c, i) {
                               return Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
                                 width: 5,
                                 child: Column(
                                   children: [
                                     Card(
                                       elevation: 0,
                                       color: Theme.of(context).backgroundColor,
-                                      child: Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                      child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Container(
-                                              child: Text(
-                                                widget._menu[category]![i].name,
-                                                style: TextStyle(fontSize: 20),
-                                                textAlign: TextAlign.start,
-                                              ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  child: Text(
+                                                    widget._menu[category]![i]
+                                                        .name,
+                                                    style:
+                                                        TextStyle(fontSize: 20),
+                                                    textAlign: TextAlign.start,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  child: Text(
+                                                    'Rs.' +
+                                                        widget
+                                                            ._menu[category]![i]
+                                                            .price
+                                                            .toString(),
+                                                    textAlign: TextAlign.start,
+                                                    style:
+                                                        TextStyle(fontSize: 20),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                             Container(
-                                              child: Text(
-                                                'Rs.' + widget._menu[category]![i].price.toString(),
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(fontSize: 20),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Container(
-                                          child: Column(
-                                            children: [
-                                              widget._menu[category]![i].quantity == 0
-                                                  ? ElevatedButton(
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor: Theme.of(context).primaryColor,
-                                                        fixedSize: Size(150, 10),
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(50),
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _cart[widget._menu[category]![i].name] = widget._menu[category]![i];
+                                              child: Column(
+                                                children: [
+                                                  widget._menu[category]![i]
+                                                              .quantity ==
+                                                          0
+                                                      ? ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                Theme.of(
+                                                                        context)
+                                                                    .primaryColor,
+                                                            fixedSize:
+                                                                Size(150, 10),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          50),
+                                                            ),
+                                                          ),
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              _cart[widget
+                                                                  ._menu[
+                                                                      category]![
+                                                                      i]
+                                                                  .name] = widget
+                                                                      ._menu[
+                                                                  category]![i];
 
-                                                          widget._menu[category]![i].quantity++;
-                                                          print(_cart);
-                                                        });
-                                                      },
-                                                      child: Text('Add'))
-                                                  : ElevatedButton(
-                                                      style: ElevatedButton.styleFrom(
-                                                          backgroundColor: Theme.of(context).primaryColor,
-                                                          fixedSize: Size(150, 10),
-                                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100))),
-                                                      onPressed: () {},
-                                                      child: Row(
-                                                        children: [
-                                                          IconButton(
-                                                            icon: const Icon(Icons.remove),
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                widget._menu[category]![i].quantity--;
-                                                                if (_cart[widget._menu[category]![i].name]!.quantity == 0) {
-                                                                  _cart.remove(widget._menu[category]![i].name);
-                                                                  print(_cart);
-                                                                }
-                                                              });
-                                                            },
+                                                              widget
+                                                                  ._menu[
+                                                                      category]![
+                                                                      i]
+                                                                  .quantity++;
+                                                              print(_cart);
+                                                            });
+                                                          },
+                                                          child: Text('Add'))
+                                                      : ElevatedButton(
+                                                          style: ElevatedButton.styleFrom(
+                                                              backgroundColor:
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .primaryColor,
+                                                              fixedSize:
+                                                                  Size(150, 10),
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              100))),
+                                                          onPressed: () {},
+                                                          child: Row(
+                                                            children: [
+                                                              IconButton(
+                                                                icon: const Icon(
+                                                                    Icons
+                                                                        .remove),
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    widget
+                                                                        ._menu[
+                                                                            category]![
+                                                                            i]
+                                                                        .quantity--;
+                                                                    if (_cart[widget._menu[category]![i].name]!
+                                                                            .quantity ==
+                                                                        0) {
+                                                                      _cart.remove(widget
+                                                                          ._menu[
+                                                                              category]![
+                                                                              i]
+                                                                          .name);
+                                                                      print(
+                                                                          _cart);
+                                                                    }
+                                                                  });
+                                                                },
+                                                              ),
+                                                              Text(widget
+                                                                  ._menu[
+                                                                      category]![
+                                                                      i]
+                                                                  .quantity
+                                                                  .toString()),
+                                                              IconButton(
+                                                                icon: const Icon(
+                                                                    Icons.add),
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    widget
+                                                                        ._menu[
+                                                                            category]![
+                                                                            i]
+                                                                        .quantity++;
+                                                                    print(
+                                                                        _cart);
+                                                                  });
+                                                                },
+                                                              ),
+                                                            ],
                                                           ),
-                                                          Text(widget._menu[category]![i].quantity.toString()),
-                                                          IconButton(
-                                                            icon: const Icon(Icons.add),
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                widget._menu[category]![i].quantity++;
-                                                                print(_cart);
-                                                              });
-                                                            },
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                              // Checkbox(
-                                              //     shape: CircleBorder(),
-                                              //     value: false,
-                                              //     onChanged: (value) {})
-                                            ],
-                                          ),
-                                        )
-                                      ]),
+                                                        ),
+                                                  // Checkbox(
+                                                  //     shape: CircleBorder(),
+                                                  //     value: false,
+                                                  //     onChanged: (value) {})
+                                                ],
+                                              ),
+                                            )
+                                          ]),
                                     ),
                                     Divider(
                                       color: Theme.of(context).primaryColor,
@@ -206,19 +283,24 @@ class _OutletMenuState extends State<OutletMenu> {
                       Container(
                         child: Text(
                           'MENU',
-                          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 40, fontWeight: FontWeight.bold),
                         ),
                         alignment: Alignment.center,
                       ),
                       Container(
                         padding: EdgeInsets.all(5),
                         child: CircleAvatar(
-                          backgroundColor: _cart.isEmpty ? Theme.of(context).backgroundColor : Theme.of(context).primaryColor,
+                          backgroundColor: _cart.isEmpty
+                              ? Theme.of(context).backgroundColor
+                              : Theme.of(context).primaryColor,
                           child: IconButton(
                             style: IconButton.styleFrom(),
                             icon: Icon(
                               Icons.shopping_cart,
-                              color: _cart.isEmpty ? Colors.black : Theme.of(context).backgroundColor,
+                              color: _cart.isEmpty
+                                  ? Colors.black
+                                  : Theme.of(context).backgroundColor,
                             ),
                             onPressed: () {
                               if (_cart.isNotEmpty) {
