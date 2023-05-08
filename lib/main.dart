@@ -49,7 +49,6 @@ class _MyAppState extends State<MyApp> {
       onUnknownRoute: (settings) {
         return MaterialPageRoute(builder: (ctx) => HomeScreen());
       },
-      
     );
   }
 }
