@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dep_college_app/Screens/Chat/chathome.dart';
 import 'package:dep_college_app/Screens/buy_and_sell/main.dart';
 import 'package:dep_college_app/Screens/coupon_exchange/main.dart';
 import 'package:dep_college_app/Screens/food_order/main.dart';
@@ -109,15 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
     } else if (number == 1) {
       currentTab = number;
       currentScreen = FoodHome(_changeAppBarTitle);
-    } else if (number == 2) {
+    } else {
       currentTab = number;
       currentScreen = OrdersHome(_changeAppBarTitle);
-    } else if (number == 3) {
-      setState(() {
-        print(number);
-        currentTab = number;
-        currentScreen = ChatHome(widget._currentUser, _changeAppBarTitle);
-      });
     }
   }
 
@@ -269,33 +262,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: TextStyle(
                                 color: currentTab == 2
                                     ? Color(tabColor[2])
-                                    : Colors.grey[450],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      MaterialButton(
-                        minWidth: 40,
-                        padding: EdgeInsets.only(left: 25, right: 25),
-                        onPressed: () {
-                          _changeTab(3);
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.chat,
-                              size: 35,
-                              color: currentTab == 3
-                                  ? Color(tabColor[3])
-                                  : Colors.grey[450],
-                            ),
-                            Text(
-                              'Chats',
-                              style: TextStyle(
-                                color: currentTab == 3
-                                    ? Color(tabColor[3])
                                     : Colors.grey[450],
                               ),
                             ),
