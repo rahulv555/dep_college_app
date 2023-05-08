@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dep_college_app/Screens/Chat/chathome.dart';
 import 'package:dep_college_app/Screens/buy_and_sell/main.dart';
 import 'package:dep_college_app/Screens/coupon_exchange/main.dart';
 import 'package:dep_college_app/Screens/food_order/main.dart';
@@ -60,23 +61,12 @@ class _HomeScreenState extends State<HomeScreen> {
     //COUPON TAB LOADING
     if (number == 0) {
       List<Coupon> c = [];
-      FirebaseFirestore.instance
-          .collection('coupons')
-          .get()
-          .then((QuerySnapshot qs) {
+      FirebaseFirestore.instance.collection('coupons').get().then((QuerySnapshot qs) {
         qs.docs.forEach((doc) {
           print(doc);
-          if ((doc['dov'] as Timestamp)
-                  .toDate()
-                  .difference(DateTime.now())
-                  .inDays <=
-              -1) {
+          if ((doc['dov'] as Timestamp).toDate().difference(DateTime.now()).inDays <= -1) {
             //delete
-            FirebaseFirestore.instance
-                .collection('coupons')
-                .doc(doc.id)
-                .delete()
-                .then((value) => print("deleted"));
+            FirebaseFirestore.instance.collection('coupons').doc(doc.id).delete().then((value) => print("deleted"));
           } else {
             c.add(Coupon(
                 cost: double.parse(doc['cost']),
@@ -87,8 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 quantity: 1,
                 seller: doc['seller'],
                 type: meal_to_string.inverse[doc['type']] as Meal,
-                vendor:
-                    doc['vendor'] == 'Bhopal' ? Vendor.bhopal : Vendor.kanaka));
+                vendor: doc['vendor'] == 'Bhopal' ? Vendor.bhopal : Vendor.kanaka));
           }
         });
 
@@ -100,17 +89,22 @@ class _HomeScreenState extends State<HomeScreen> {
           currentTab = number;
           print(number);
           print(c);
-          currentScreen = CouponHome(
-              widget._currentUser, _changeAppBarTitle, widget._coupons);
+          currentScreen = CouponHome(widget._currentUser, _changeAppBarTitle, widget._coupons);
           ; // if user taps on this dashboard tab will be active
         });
       });
     } else if (number == 1) {
       currentTab = number;
       currentScreen = FoodHome(_changeAppBarTitle);
-    } else {
+    } else if (number == 2) {
       currentTab = number;
       currentScreen = OrdersHome(_changeAppBarTitle);
+    } else if (number == 3) {
+      setState(() {
+        print(number);
+        currentTab = number;
+        currentScreen = ChatHome(widget._currentUser, _changeAppBarTitle);
+      });
     }
   }
 
@@ -130,13 +124,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
-                  tooltip:
-                      MaterialLocalizations.of(context).openAppDrawerTooltip,
+                  tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
                 );
               },
             ),
-            title:
-                Text(widget.appBarTitle, style: TextStyle(color: creamColor)),
+            title: Text(widget.appBarTitle, style: TextStyle(color: creamColor)),
             backgroundColor: Theme.of(context).primaryColor,
             actions: [
               ElevatedButton(
@@ -144,9 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   "Logout",
                   style: TextStyle(color: creamColor),
                 ),
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStatePropertyAll(Color(greenColor))),
+                style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color(greenColor))),
                 onPressed: () {
                   FirebaseAuth.instance.signOut().then((value) {
                     print("Signed Out");
@@ -154,8 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       context,
                       ModalRoute.withName('/login'),
                     );
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                   });
                 },
               ),
@@ -199,16 +188,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(
                               Icons.dashboard,
                               size: 35,
-                              color: currentTab == 0
-                                  ? Color(tabColor[0])
-                                  : Colors.grey[450],
+                              color: currentTab == 0 ? Color(tabColor[0]) : Colors.grey[450],
                             ),
                             Text(
                               'Coupons',
                               style: TextStyle(
-                                color: currentTab == 0
-                                    ? Color(tabColor[0])
-                                    : Colors.grey[450],
+                                color: currentTab == 0 ? Color(tabColor[0]) : Colors.grey[450],
                               ),
                             ),
                           ],
@@ -226,16 +211,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(
                               Icons.food_bank_outlined,
                               size: 35,
-                              color: currentTab == 1
-                                  ? Color(tabColor[1])
-                                  : Colors.grey[450],
+                              color: currentTab == 1 ? Color(tabColor[1]) : Colors.grey[450],
                             ),
                             Text(
                               'Food',
                               style: TextStyle(
-                                color: currentTab == 1
-                                    ? Color(tabColor[1])
-                                    : Colors.grey[450],
+                                color: currentTab == 1 ? Color(tabColor[1]) : Colors.grey[450],
                               ),
                             ),
                           ],
@@ -253,16 +234,35 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(
                               Icons.blinds_closed,
                               size: 35,
-                              color: currentTab == 2
-                                  ? Color(tabColor[2])
-                                  : Colors.grey[450],
+                              color: currentTab == 2 ? Color(tabColor[2]) : Colors.grey[450],
                             ),
                             Text(
                               'Orders',
                               style: TextStyle(
-                                color: currentTab == 2
-                                    ? Color(tabColor[2])
-                                    : Colors.grey[450],
+                                color: currentTab == 2 ? Color(tabColor[2]) : Colors.grey[450],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      MaterialButton(
+                        minWidth: 40,
+                        padding: EdgeInsets.only(left: 25, right: 25),
+                        onPressed: () {
+                          _changeTab(3);
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.chat,
+                              size: 35,
+                              color: currentTab == 3 ? Color(tabColor[3]) : Colors.grey[450],
+                            ),
+                            Text(
+                              'Chats',
+                              style: TextStyle(
+                                color: currentTab == 3 ? Color(tabColor[3]) : Colors.grey[450],
                               ),
                             ),
                           ],

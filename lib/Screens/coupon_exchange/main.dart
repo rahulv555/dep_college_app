@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dep_college_app/Screens/Chat/chathome.dart';
 import 'package:dep_college_app/Screens/coupon_exchange/edit_coupon.dart';
 import 'package:dep_college_app/Screens/coupon_exchange/selectview.dart';
 import 'package:dep_college_app/Screens/coupon_exchange/searchbar.dart';
@@ -11,6 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
+//import 'package:url_launcher/url_launcher.dart';
+//import 'package:url_launcher_web/url_launcher_web.dart';
+import 'package:whatsapp_share2/whatsapp_share2.dart';
 import './delete_alert.dart';
 
 import 'sell_coupon.dart';
@@ -21,10 +25,8 @@ class CouponHome extends StatefulWidget {
   Function _changeAppBarTitle;
 
   CouponHome(this._currentUser, this._changeAppBarTitle, this.coupons) {
-    
     _changeAppBarTitle('Coupons');
     print("Coupons");
-
   }
 
   @override
@@ -39,10 +41,31 @@ class _CouponHomeState extends State<CouponHome> {
     Meal.full: 'Full day',
   };
   int _selectedView = 0;
-  List<String> _image = [
-    'assets/images/bhopal.jpeg',
-    'assets/images/kanaka.jpeg'
-  ];
+  List<String> _image = ['assets/images/bhopal.jpeg', 'assets/images/kanaka.jpeg'];
+
+  // void _createRoom(_currentUser, _otherUser) {
+  //   String chatroomid = [FirebaseAuth.instance.currentUser?.uid, _otherUser].join();
+  //   print(_otherUser);
+  //   FirebaseFirestore.instance.collection('chatrooms').doc().set({
+  //     'messages': [],
+  //     'dov': Timestamp.fromDate(DateTime.now()),
+  //   }).then((value) {
+  //     FirebaseFirestore.instance.collection('chatrooms').doc(chatroomid).get().then((value) {
+  //       List<List<String>> messages = value['messages']; // index 0 sender, index 1 message
+  //       DateTime doc = (value['dov'] as Timestamp).toDate();
+
+  //       Navigator.push(context, MaterialPageRoute(builder: (context) => ChatHome(_currentUser, chatroomid, widget._changeAppBarTitle)));
+  //     });
+  //   });
+  // }
+
+  Future<void> _createRoom(_currentUser, _otherUser) async {
+    FirebaseFirestore.instance.collection('users').doc(_otherUser).get().then((value) async {
+      String phonenumber = value['Phonenumber'].toString();
+
+      await WhatsappShare.share(phone: phonenumber, text: 'Hi!! I am interested in buying your coupon. Can i get more details?');
+    });
+  }
 
   void _addCoupon(String cost, String date, String meal, String vendor) {
     Navigator.pop(context);
@@ -88,8 +111,7 @@ class _CouponHomeState extends State<CouponHome> {
     });
   }
 
-  void _editCoupon(
-      String cost, String date, String meal, String vendor, int index) {
+  void _editCoupon(String cost, String date, String meal, String vendor, int index) {
     Navigator.pop(context);
     DateTime dov = DateTime.now();
     switch (date) {
@@ -222,70 +244,46 @@ class _CouponHomeState extends State<CouponHome> {
                                       child: Image(
                                         width: 50,
                                         height: 50,
-                                        image: new AssetImage(
-                                            widget.coupons[index].vendor ==
-                                                    Vendor.bhopal
-                                                ? _image[0]
-                                                : _image[1]),
+                                        image: new AssetImage(widget.coupons[index].vendor == Vendor.bhopal ? _image[0] : _image[1]),
                                       ),
                                     ),
                                     Container(
-                                      margin:
-                                          EdgeInsets.only(left: 10, right: 30),
+                                      margin: EdgeInsets.only(left: 10, right: 30),
                                       padding: EdgeInsets.all(10),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                              (widget.coupons[index].vendor ==
-                                                          Vendor.bhopal
-                                                      ? "Bhopal - "
-                                                      : "Kanaka - ") +
-                                                  meal_to_string[widget
-                                                          .coupons[index].type]
-                                                      .toString()),
+                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                              (widget.coupons[index].vendor == Vendor.bhopal ? "Bhopal - " : "Kanaka - ") + meal_to_string[widget.coupons[index].type].toString()),
                                           SizedBox(height: 10.0),
                                           Text(
-                                            'Valid for : ' +
-                                                DateFormat.yMd()
-                                                    .format(widget
-                                                        .coupons[index].dov
-                                                        .add(Duration(days: 2)))
-                                                    .toString(),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500),
+                                            'Valid for : ' + DateFormat.yMd().format(widget.coupons[index].dov.add(Duration(days: 2))).toString(),
+                                            style: TextStyle(fontWeight: FontWeight.w500),
                                           ),
                                           Text(
-                                            'Sold by : ' +
-                                                widget
-                                                    .coupons[index].phonenumber,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500),
+                                            'Sold by : ' + widget.coupons[index].phonenumber,
+                                            style: TextStyle(fontWeight: FontWeight.w500),
                                           ),
                                         ],
                                       ),
                                     ),
                                     Container(
-                                      padding:
-                                          EdgeInsets.only(top: 7, left: 10),
+                                      padding: EdgeInsets.only(top: 7, left: 10),
                                       child: Column(
                                         children: [
                                           Text(
                                             'Rs. ${widget.coupons[index].cost}',
-                                            style: TextStyle(
-                                                color: Color(greenColor),
-                                                fontWeight: FontWeight.bold),
+                                            style: TextStyle(color: Color(greenColor), fontWeight: FontWeight.bold),
                                           ),
                                           IconButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                _createRoom(widget._currentUser, widget.coupons[index].seller);
+                                              },
                                               splashRadius: 20,
                                               icon: Icon(
                                                 Icons.chat_bubble,
-                                                color: Theme.of(context)
-                                                    .primaryColor,
+                                                color: Theme.of(context).primaryColor,
                                               )),
                                         ],
                                       ),
@@ -308,8 +306,7 @@ class _CouponHomeState extends State<CouponHome> {
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemBuilder: (ctx, index) {
-                          if (widget.coupons[index].seller !=
-                              FirebaseAuth.instance.currentUser?.uid)
+                          if (widget.coupons[index].seller != FirebaseAuth.instance.currentUser?.uid)
                             return SizedBox.shrink();
                           else
                             return Column(
@@ -326,89 +323,57 @@ class _CouponHomeState extends State<CouponHome> {
                                         child: Image(
                                           width: 50,
                                           height: 50,
-                                          image: new AssetImage(
-                                              widget.coupons[index].vendor ==
-                                                      Vendor.bhopal
-                                                  ? _image[0]
-                                                  : _image[1]),
+                                          image: new AssetImage(widget.coupons[index].vendor == Vendor.bhopal ? _image[0] : _image[1]),
                                         ),
                                       ),
                                       Container(
-                                        margin: EdgeInsets.only(
-                                            left: 10, right: 30),
+                                        margin: EdgeInsets.only(left: 10, right: 30),
                                         padding: EdgeInsets.all(10),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                (widget.coupons[index].vendor ==
-                                                            Vendor.bhopal
-                                                        ? "Bhopal - "
-                                                        : "Kanaka - ") +
-                                                    meal_to_string[widget
-                                                            .coupons[index]
-                                                            .type]
-                                                        .toString()),
+                                                style: TextStyle(fontWeight: FontWeight.bold),
+                                                (widget.coupons[index].vendor == Vendor.bhopal ? "Bhopal - " : "Kanaka - ") + meal_to_string[widget.coupons[index].type].toString()),
                                             SizedBox(height: 10.0),
                                             Text(
-                                              'Valid for : ' +
-                                                  DateFormat.yMd()
-                                                      .format(widget
-                                                          .coupons[index].dov
-                                                          .add(Duration(
-                                                              days: 2)))
-                                                      .toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500),
+                                              'Valid for : ' + DateFormat.yMd().format(widget.coupons[index].dov.add(Duration(days: 2))).toString(),
+                                              style: TextStyle(fontWeight: FontWeight.w500),
                                             ),
                                             Text(
-                                              'Sold by : ' +
-                                                  widget.coupons[index]
-                                                      .phonenumber,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500),
+                                              'Sold by : ' + widget.coupons[index].phonenumber,
+                                              style: TextStyle(fontWeight: FontWeight.w500),
                                             ),
                                           ],
                                         ),
                                       ),
                                       Container(
-                                        padding:
-                                            EdgeInsets.only(top: 7, left: 1),
+                                        padding: EdgeInsets.only(top: 7, left: 1),
                                         child: Column(
                                           children: [
                                             Text(
                                               'Rs. ${widget.coupons[index].cost}',
-                                              style: TextStyle(
-                                                  color: Color(greenColor),
-                                                  fontWeight: FontWeight.bold),
+                                              style: TextStyle(color: Color(greenColor), fontWeight: FontWeight.bold),
                                             ),
                                             Row(
                                               children: [
                                                 IconButton(
                                                     onPressed: () {
-                                                      showMyDialog(context,
-                                                          index, _deleteCoupon);
+                                                      showMyDialog(context, index, _deleteCoupon);
                                                     },
                                                     splashRadius: 20,
                                                     icon: Icon(
                                                       Icons.delete_forever,
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
+                                                      color: Theme.of(context).primaryColor,
                                                     )),
                                                 IconButton(
                                                     onPressed: () {
-                                                      _editCouponSheet(
-                                                          ctx, index);
+                                                      _editCouponSheet(ctx, index);
                                                     },
                                                     splashRadius: 20,
                                                     icon: Icon(
                                                       Icons.edit,
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
+                                                      color: Theme.of(context).primaryColor,
                                                     )),
                                               ],
                                             ),
