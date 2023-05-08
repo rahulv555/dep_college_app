@@ -30,18 +30,14 @@ class _FoodHomeState extends State<FoodHome> {
   }
 
   void _selectOutlet(int o) {
-    FirebaseFirestore.instance
-        .collection('outlets')
-        .doc(o.toString())
-        .collection('menu')
-        .get()
-        .then((QuerySnapshot qs) {
+    FirebaseFirestore.instance.collection('outlets').doc(o.toString()).collection('menu').get().then((QuerySnapshot qs) {
       Map<String, List<FoodItem>> categories = {};
       qs.docs.forEach((doc) {
         if (doc.exists) {
           //doc is one category
           String cat_name = doc["name"];
           List<FoodItem> fs = [];
+          // print(doc);
           (doc["items"] as List).forEach((item) {
             item = item as Map<String, dynamic>;
             // print('1');
@@ -51,11 +47,7 @@ class _FoodHomeState extends State<FoodHome> {
             item.values.first["Available"].forEach((a) {
               av.add(a.toString());
             });
-            fs.add(FoodItem(
-                name: item.keys.elementAt(0),
-                price: p,
-                availability: av,
-                quantity: 0));
+            fs.add(FoodItem(name: item.keys.elementAt(0), price: p, availability: av, quantity: 0));
           });
           categories[cat_name] = fs;
         }
@@ -71,10 +63,8 @@ class _FoodHomeState extends State<FoodHome> {
   @override
   Widget build(BuildContext context) {
     if (_selectedView == 1) {
-      return OutletMenu(
-          _selectedOutlet, _selectView, widget._changeAppBarTitle, _menu);
+      return OutletMenu(_selectedOutlet, _selectView, widget._changeAppBarTitle, _menu);
     } else
-      return FoodHomePage(
-          _selectOutlet, _selectView, widget._changeAppBarTitle);
+      return FoodHomePage(_selectOutlet, _selectView, widget._changeAppBarTitle);
   }
 }

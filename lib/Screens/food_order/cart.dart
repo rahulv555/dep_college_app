@@ -75,8 +75,18 @@ class _CartState extends State<Cart> {
                               ],
                             ),
                             Container(
-                              child: Column(
+                              child: Row(
                                 children: [
+                                  Text('Pack?'),
+                                  Checkbox(
+                                      activeColor: Theme.of(context).primaryColor,
+                                      checkColor: Theme.of(context).backgroundColor,
+                                      value: widget._cart[itemname]!.pack,
+                                      onChanged: (b) {
+                                        setState(() {
+                                          widget._cart[itemname]!.pack = b as bool;
+                                        });
+                                      }),
                                   widget._cart[itemname]!.quantity == 0
                                       ? ElevatedButton(
                                           style: ElevatedButton.styleFrom(
@@ -156,7 +166,6 @@ class _CartState extends State<Cart> {
                 children: [
                   Text('Total : Rs.' + _calculateTotal().toString(), style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 30)),
                   ElevatedButton(
-                    
                       style: ElevatedButton.styleFrom(backgroundColor: widget._cart.length == 0 ? Colors.grey : Colors.red, shape: StadiumBorder(), fixedSize: Size(100, 50)),
                       onPressed: () {},
                       child: Text(

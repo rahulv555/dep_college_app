@@ -11,6 +11,8 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
+  final _textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,33 +26,37 @@ class _SearchBarState extends State<SearchBar> {
                 fit: FlexFit.loose,
                 child: TextField(
                   cursorColor: Color(0xFFBDBDBD),
+                  onChanged: (text) {
+                    setState(() {
+                      _textController.text = text;
+                      print(_textController.text);
+                    });
+                  },
+                  onSubmitted: (text) {
+                    widget._filterItems(text);
+                  },
                   decoration: InputDecoration(
                     fillColor: Color(0xFFF6F6F6),
+
                     filled: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide.none),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(50), borderSide: BorderSide.none),
                     hintText: 'Search',
                     hintStyle: TextStyle(color: Colors.grey, fontSize: 18),
                     prefixIcon: Icon(
                       Icons.search,
                       color: Color(0xffBDBDBD),
                     ),
-                    suffixIcon: IconButton(
-                      iconSize: 20,
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    FilterCoupons(widget._filterItems)));
-                      },
-                      splashRadius: 1,
-                      icon: Icon(
-                        Icons.filter_alt_rounded,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
+                    // suffixIcon: IconButton(
+                    //   iconSize: 20,
+                    //   onPressed: () {
+                    //     Navigator.push(context, MaterialPageRoute(builder: (context) => FilterCoupons(widget._filterItems)));
+                    //   },
+                    //   splashRadius: 1,
+                    //   icon: Icon(
+                    //     Icons.filter_alt_rounded,
+                    //     color: Theme.of(context).primaryColor,
+                    //   ),
+                    // ),
 
                     // prefixIcon: Container(
                     //   padding: EdgeInsets.all(15),
