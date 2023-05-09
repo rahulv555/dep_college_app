@@ -116,8 +116,7 @@ class _DetailsState extends State<Details> {
       return false;
     }
     if (double.tryParse(s) == null) return false;
-    if (double.tryParse(s) != null &&
-        (double.parse(s) < 1e9 || double.parse(s) >= 1e10)) return false;
+    if (double.tryParse(s) != null && (double.parse(s) < 1e9 || double.parse(s) >= 1e10)) return false;
     return true;
   }
 
@@ -137,11 +136,7 @@ class _DetailsState extends State<Details> {
       child: ElevatedButton(
         onPressed: () async {
           print('submit Button Pressed');
-          if (_name.text.isEmpty ||
-              dropdownvalue.isEmpty ||
-              _date.text.isEmpty ||
-              phoneNumberValidator(_phonenumber.text) == false ||
-              textValidator(_name.text) == false) {
+          if (_name.text.isEmpty || dropdownvalue.isEmpty || _date.text.isEmpty || phoneNumberValidator(_phonenumber.text) == false || textValidator(_name.text) == false) {
             pos = false;
           } else
             pos = true;
@@ -150,51 +145,36 @@ class _DetailsState extends State<Details> {
             setState(() {
               error = false;
             });
-            FirebaseAuth.instance
-                .createUserWithEmailAndPassword(
-                    email: widget._email, password: widget._password)
-                .then((value) async {
+            FirebaseAuth.instance.createUserWithEmailAndPassword(email: widget._email, password: widget._password).then((value) async {
               print("Created new account");
               await FirebaseFirestore.instance
                   .collection('users')
                   .doc(FirebaseAuth.instance.currentUser?.uid)
                   .set({})
-                  .then((value) => print(
-                      'Created user ${FirebaseAuth.instance.currentUser?.uid}'))
+                  .then((value) => print('Created user ${FirebaseAuth.instance.currentUser?.uid}'))
                   .catchError((error) => print(error));
               print("Created new account again");
 
-              await FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser?.uid)
-                  .update({
+              await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).update({
                 "Name": _name.text,
                 "Phonenumber": _phonenumber.text,
                 "Gradyear": int.parse(_date.text),
-                "Balance": double.parse('0')
+                "Balance": double.parse('0'),
+                "outlet": false,
               }).then((value) {
                 print("Uers data added");
                 //  pos=0;
                 var _currentUser;
-                FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(FirebaseAuth.instance.currentUser?.uid)
-                    .get()
-                    .then((DocumentSnapshot doc) {
+                FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).get().then((DocumentSnapshot doc) {
                   if (doc.exists) {
                     _currentUser = doc.data();
 
                     Navigator.pop(context);
                     Navigator.pop(context);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                HomeScreen(currentUser: _currentUser)));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen(currentUser: _currentUser)));
                     print(_currentUser);
 
                     // print(_userEvents);
-
                   } else {
                     print('Document does not exist on the database');
                   }
@@ -329,12 +309,7 @@ class _DetailsState extends State<Details> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      Theme.of(context).backgroundColor,
-                      Theme.of(context).backgroundColor,
-                      Theme.of(context).backgroundColor,
-                      Theme.of(context).backgroundColor
-                    ],
+                    colors: [Theme.of(context).backgroundColor, Theme.of(context).backgroundColor, Theme.of(context).backgroundColor, Theme.of(context).backgroundColor],
                     stops: [0.1, 0.4, 0.7, 0.9],
                   ),
                 ),
@@ -362,13 +337,11 @@ class _DetailsState extends State<Details> {
                       SizedBox(height: 30.0),
                       _buildTF('Name', 'Enter your Full Name', _name),
                       SizedBox(height: 30.0),
-                      _buildTF('Phone Number', 'Enter your Phone Number',
-                          _phonenumber),
+                      _buildTF('Phone Number', 'Enter your Phone Number', _phonenumber),
                       SizedBox(height: 30.0),
 
                       //_buildGradYear(),
-                      _buildTF("Graduation Year", "Enter your Graduation Year",
-                          _date),
+                      _buildTF("Graduation Year", "Enter your Graduation Year", _date),
                       SizedBox(height: 30.0),
 
                       _buildSubmitButton(),

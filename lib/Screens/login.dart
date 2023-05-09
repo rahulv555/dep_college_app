@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dep_college_app/Screens/home_seller.dart';
 import 'package:dep_college_app/utilities/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -138,24 +139,27 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          FirebaseAuth.instance
-              .signInWithEmailAndPassword(
-                  email: _email.text, password: _pass.text)
-              .then((value) {
-            FirebaseFirestore.instance
-                .collection('users')
-                .doc(FirebaseAuth.instance.currentUser?.uid)
-                .get()
-                .then((DocumentSnapshot doc) {
+          FirebaseAuth.instance.signInWithEmailAndPassword(email: _email.text, password: _pass.text).then((value) {
+            FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).get().then((DocumentSnapshot doc) {
               if (doc.exists) {
                 _currentUser = doc.data();
 
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomeScreen(
-                              currentUser: _currentUser,
-                            )));
+                if (_currentUser['outlet']) {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomeScreenSeller(
+                                currentUser: _currentUser,
+                              )));
+                } else {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomeScreen(
+                                currentUser: _currentUser,
+                              )));
+                }
+
                 print(_currentUser);
               } else {
                 print('Document does not exist on the database');
