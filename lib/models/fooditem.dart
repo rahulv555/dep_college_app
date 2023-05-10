@@ -1,7 +1,7 @@
 class FoodItem {
-  final String name;
-  final double price;
-  final List<String> availability;
+  String name;
+  double price;
+  List<String> availability;
   double quantity;
   bool pack;
 

@@ -6,9 +6,11 @@ import 'package:dep_college_app/Screens/login.dart';
 import 'package:dep_college_app/Screens/orders/main.dart';
 import 'package:dep_college_app/Screens/prof.dart';
 import 'package:dep_college_app/Screens/seller/menu/menu.dart';
+import 'package:dep_college_app/Screens/seller/menu/order.dart';
 import 'package:dep_college_app/Screens/welcome.dart';
 import 'package:dep_college_app/models/coupon.dart';
 import 'package:dep_college_app/models/fooditem.dart';
+import 'package:dep_college_app/models/order.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +26,7 @@ class HomeScreenSeller extends StatefulWidget {
   var _selectedOutlet = 0;
 
   final List<String> _outlet_names = [
-    'CAFETARIA',
+    'CANTEEN',
     'HOTSPOT',
     'JUICE CORNER',
     'KERALA CANTEEN',
@@ -61,8 +63,32 @@ class _HomeScreenSellerState extends State<HomeScreenSeller> {
     });
 
     if (currentTab == 0) {
-      ;
+      FirebaseFirestore.instance.collection('outlets').doc(widget._selectedOutlet.toString()).collection('orders').where('status', isLessThan: 3).get().then((QuerySnapshot qs) {
+        List<Orderr> _orders = [];
+        qs.docs.forEach((doc) {
+          if (doc.exists) {
+            List<FoodItem> _items = [];
+            (doc["items"] as List).forEach((item) {
+              double p = item.values.first["Price"].toDouble();
+              List<String> av = [];
+              item.values.first["Available"].forEach((a) {
+                av.add(a.toString());
+              });
+              _items.add(FoodItem(name: item.keys.elementAt(0), price: p, availability: av, quantity: item.values.first["Quantity"]));
+            });
+
+            _orders.add(Orderr(doc["orderid"], doc["phonenumber"], doc["custname"], _items, doc["status"]));
+          }
+        });
+
+        setState(() {
+          currentScreen = OrderSeller(widget._selectedOutlet, _changeAppBarTitle, _orders);
+        });
+      });
     } else if (currentTab == 1) {
+      print('lol');
+
+      print(widget._selectedOutlet);
       FirebaseFirestore.instance.collection('outlets').doc(widget._selectedOutlet.toString()).collection('menu').get().then((QuerySnapshot qs) {
         Map<String, List<FoodItem>> categories = {};
         qs.docs.forEach((doc) {
@@ -89,9 +115,9 @@ class _HomeScreenSellerState extends State<HomeScreenSeller> {
         setState(() {
           _menu = categories;
         });
-      });
-      setState(() {
-        currentScreen = OutletMenuSeller(widget._selectedOutlet, _changeAppBarTitle, _menu);
+        setState(() {
+          currentScreen = OutletMenuSeller(widget._selectedOutlet, _changeAppBarTitle, _menu);
+        });
       });
     } else if (currentTab == 2) {}
   }

@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dep_college_app/Screens/food_order/cart.dart';
 import 'package:dep_college_app/Screens/food_order/searchbar.dart';
+import 'package:dep_college_app/Screens/seller/menu/edit.dart';
 import 'package:dep_college_app/models/fooditem.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
+
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class OutletMenuSeller extends StatefulWidget {
   int _selectedOutlet = 0;
@@ -39,6 +43,45 @@ class _OutletMenuSellerState extends State<OutletMenuSeller> {
         _cart.remove(i);
         print(_cart);
       }
+    });
+  }
+
+  void _editMenuItem(BuildContext ctx, String category, int i) {
+    print(widget._menu[category]![i]);
+
+    showModalBottomSheet(
+        backgroundColor: Theme.of(context).backgroundColor,
+        context: ctx,
+        builder: (bCtx) {
+          return GestureDetector(
+            onTap: () {},
+            behavior: HitTestBehavior.opaque,
+            child: EditItem(widget._menu[category]![i], category, i, widget._menu.keys, _editItem),
+          );
+        });
+  }
+
+  void _editItem(String category, int i, String name, String cost, String _originalCategory) {
+    Navigator.pop(context);
+    List<FoodItem> items = widget._menu[category]!;
+    print("lol");
+    print(cost);
+    items.add(FoodItem(name: name, price: double.parse(cost), availability: widget._menu[category]![i].availability, quantity: 0));
+
+    List<FoodItem> original_items = widget._menu[_originalCategory]!;
+    original_items.removeAt(i);
+
+    FirebaseFirestore.instance.collection('outlets').doc(widget._selectedOutlet.toString()).collection('menu').doc(category).update({
+      'items': items,
+    }).then((value) {
+      FirebaseFirestore.instance.collection('outlets').doc(widget._selectedOutlet.toString()).collection('menu').doc(_originalCategory).update({
+        'items': original_items,
+      }).then((value) {
+        setState(() {
+          widget._menu[category] = items;
+          widget._menu[_originalCategory] = original_items;
+        });
+      });
     });
   }
 
@@ -157,14 +200,10 @@ class _OutletMenuSellerState extends State<OutletMenuSeller> {
                                                         ),
                                                       ),
                                                       onPressed: () {
-                                                        setState(() {
-                                                          _cart[widget._menu[category]![i].name] = widget._menu[category]![i];
-
-                                                          widget._menu[category]![i].quantity++;
-                                                          print(_cart);
-                                                        });
+                                                        //open edit sheet
+                                                        _editMenuItem(context, category, i);
                                                       },
-                                                      child: Text('Add'))
+                                                      child: Text('Edit'))
                                                   : ElevatedButton(
                                                       style: ElevatedButton.styleFrom(
                                                           backgroundColor: Theme.of(context).primaryColor,
@@ -229,48 +268,14 @@ class _OutletMenuSellerState extends State<OutletMenuSeller> {
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                widget._changeAppBarTitle('Food');
-                              },
-                              icon: Icon(Icons.arrow_back)),
-                        ],
-                      ),
                       Container(
                         child: Text(
                           'MENU',
                           style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                         ),
                         alignment: Alignment.center,
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        child: CircleAvatar(
-                          backgroundColor: _cart.isEmpty ? Theme.of(context).backgroundColor : Theme.of(context).primaryColor,
-                          child: IconButton(
-                            style: IconButton.styleFrom(),
-                            icon: Icon(
-                              Icons.shopping_cart,
-                              color: _cart.isEmpty ? Colors.black : Theme.of(context).backgroundColor,
-                            ),
-                            onPressed: () {
-                              if (_cart.isNotEmpty) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Cart(
-                                              _cart,
-                                              _setActualQuant,
-                                            )));
-                              }
-                            },
-                          ),
-                        ),
                       ),
                     ],
                   ),
