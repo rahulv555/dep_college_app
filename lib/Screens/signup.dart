@@ -31,7 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             controller: _emailtextcontroller,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
-              color: Colors.white,
+              color: Theme.of(context).primaryColor,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -67,7 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             controller: _passwordtextcontroller,
             obscureText: true,
             style: TextStyle(
-              color: Colors.white,
+              color: Theme.of(context).primaryColor,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -96,8 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return Details(
-                    _emailtextcontroller.text, _passwordtextcontroller.text);
+                return Details(_emailtextcontroller.text, _passwordtextcontroller.text);
               },
             ),
           );
@@ -108,12 +107,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).primaryColor,
         ),
         child: Text(
           'Sign Up',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: Theme.of(context).backgroundColor,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -201,12 +200,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      Theme.of(context).backgroundColor,
-                      Theme.of(context).backgroundColor,
-                      Theme.of(context).backgroundColor,
-                      Theme.of(context).backgroundColor
-                    ],
+                    colors: [Theme.of(context).backgroundColor, Theme.of(context).backgroundColor, Theme.of(context).backgroundColor, Theme.of(context).backgroundColor],
                     stops: [0.1, 0.4, 0.7, 0.9],
                   ),
                 ),

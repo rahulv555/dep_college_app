@@ -7,6 +7,7 @@ import 'package:dep_college_app/Screens/orders/main.dart';
 import 'package:dep_college_app/Screens/prof.dart';
 import 'package:dep_college_app/Screens/welcome.dart';
 import 'package:dep_college_app/models/coupon.dart';
+import 'package:dep_college_app/models/fooditem.dart';
 import 'package:dep_college_app/utilities/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import '../models/order.dart';
 import 'coupon_exchange/sell_coupon.dart';
 import 'maindrawer.dart';
 
@@ -49,6 +51,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _refresh() {
+    setState(() {
+      _changeTab(currentTab);
+    });
+  }
+
   Map<Meal, String> meal_to_string = {
     Meal.breakfast: 'Breakfast',
     Meal.lunch: 'Lunch',
@@ -60,23 +68,12 @@ class _HomeScreenState extends State<HomeScreen> {
     //COUPON TAB LOADING
     if (number == 0) {
       List<Coupon> c = [];
-      FirebaseFirestore.instance
-          .collection('coupons')
-          .get()
-          .then((QuerySnapshot qs) {
+      FirebaseFirestore.instance.collection('coupons').get().then((QuerySnapshot qs) {
         qs.docs.forEach((doc) {
           print(doc);
-          if ((doc['dov'] as Timestamp)
-                  .toDate()
-                  .difference(DateTime.now())
-                  .inDays <=
-              -1) {
+          if ((doc['dov'] as Timestamp).toDate().difference(DateTime.now()).inDays <= -1) {
             //delete
-            FirebaseFirestore.instance
-                .collection('coupons')
-                .doc(doc.id)
-                .delete()
-                .then((value) => print("deleted"));
+            FirebaseFirestore.instance.collection('coupons').doc(doc.id).delete().then((value) => print("deleted"));
           } else {
             c.add(Coupon(
                 cost: double.parse(doc['cost']),
@@ -87,8 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 quantity: 1,
                 seller: doc['seller'],
                 type: meal_to_string.inverse[doc['type']] as Meal,
-                vendor:
-                    doc['vendor'] == 'Bhopal' ? Vendor.bhopal : Vendor.kanaka));
+                vendor: doc['vendor'] == 'Bhopal' ? Vendor.bhopal : Vendor.kanaka));
           }
         });
 
@@ -100,23 +96,48 @@ class _HomeScreenState extends State<HomeScreen> {
           currentTab = number;
           print(number);
           print(c);
-          currentScreen = CouponHome(
-              widget._currentUser, _changeAppBarTitle, widget._coupons);
+          currentScreen = CouponHome(widget._currentUser, _changeAppBarTitle, widget._coupons);
           ; // if user taps on this dashboard tab will be active
         });
       });
     } else if (number == 1) {
       currentTab = number;
       currentScreen = FoodHome(_changeAppBarTitle);
-    } else {
+    } else if (number == 2) {
+      print("lol");
       currentTab = number;
-      currentScreen = OrdersHome(_changeAppBarTitle);
+      List<Orderr> orders = [];
+      List<String> _outlets = [];
+      FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).collection('orders').get().then((value) {
+        value.docs.forEach((element) {
+          List<FoodItem> _items = [];
+
+          (element["items"] as List).forEach((item) {
+            double p = item["Price"];
+
+            _items.add(FoodItem(name: item["Name"], price: p, availability: ["Breakfast", "Lunch", "Dinner"], quantity: item["Quantity"]));
+          });
+          orders.add(Orderr(element['orderid'], element['phonenumber'], element['custname'], _items, element['status']));
+
+          _outlets.add(element['outlet']);
+        });
+
+        setState(() {
+          currentScreen = OrdersHome(_changeAppBarTitle, orders, _outlets);
+        });
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: Theme.of(context).primaryColor,
+            child: Icon(Icons.refresh),
+            onPressed: () {
+              _refresh();
+            }),
         appBar: AppBar(
             toolbarHeight: 70,
             leading: Builder(
@@ -130,13 +151,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
-                  tooltip:
-                      MaterialLocalizations.of(context).openAppDrawerTooltip,
+                  tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
                 );
               },
             ),
-            title:
-                Text(widget.appBarTitle, style: TextStyle(color: creamColor)),
+            title: Text(widget.appBarTitle, style: TextStyle(color: creamColor)),
             backgroundColor: Theme.of(context).primaryColor,
             actions: [
               ElevatedButton(
@@ -144,9 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   "Logout",
                   style: TextStyle(color: creamColor),
                 ),
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStatePropertyAll(Color(greenColor))),
+                style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Color(greenColor))),
                 onPressed: () {
                   FirebaseAuth.instance.signOut().then((value) {
                     print("Signed Out");
@@ -154,8 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       context,
                       ModalRoute.withName('/login'),
                     );
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                   });
                 },
               ),
@@ -199,16 +215,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(
                               Icons.dashboard,
                               size: 35,
-                              color: currentTab == 0
-                                  ? Color(tabColor[0])
-                                  : Colors.grey[450],
+                              color: currentTab == 0 ? Color(tabColor[0]) : Colors.grey[450],
                             ),
                             Text(
                               'Coupons',
                               style: TextStyle(
-                                color: currentTab == 0
-                                    ? Color(tabColor[0])
-                                    : Colors.grey[450],
+                                color: currentTab == 0 ? Color(tabColor[0]) : Colors.grey[450],
                               ),
                             ),
                           ],
@@ -226,16 +238,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(
                               Icons.food_bank_outlined,
                               size: 35,
-                              color: currentTab == 1
-                                  ? Color(tabColor[1])
-                                  : Colors.grey[450],
+                              color: currentTab == 1 ? Color(tabColor[1]) : Colors.grey[450],
                             ),
                             Text(
                               'Food',
                               style: TextStyle(
-                                color: currentTab == 1
-                                    ? Color(tabColor[1])
-                                    : Colors.grey[450],
+                                color: currentTab == 1 ? Color(tabColor[1]) : Colors.grey[450],
                               ),
                             ),
                           ],
@@ -253,16 +261,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(
                               Icons.blinds_closed,
                               size: 35,
-                              color: currentTab == 2
-                                  ? Color(tabColor[2])
-                                  : Colors.grey[450],
+                              color: currentTab == 2 ? Color(tabColor[2]) : Colors.grey[450],
                             ),
                             Text(
                               'Orders',
                               style: TextStyle(
-                                color: currentTab == 2
-                                    ? Color(tabColor[2])
-                                    : Colors.grey[450],
+                                color: currentTab == 2 ? Color(tabColor[2]) : Colors.grey[450],
                               ),
                             ),
                           ],

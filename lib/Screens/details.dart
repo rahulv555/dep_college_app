@@ -52,7 +52,7 @@ class _DetailsState extends State<Details> {
             controller: controller,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white,
+              color: Theme.of(context).primaryColor,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -210,12 +210,12 @@ class _DetailsState extends State<Details> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).primaryColor,
         ),
         child: Text(
           'SUBMIT',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: Theme.of(context).backgroundColor,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,

@@ -85,6 +85,8 @@ flutter:
     - assets/images/juice-corner.jpg
     - assets/images/keralacanteen.jpg
     - assets/images/coffeeday.jpg
+    - assets/images/qr.png
+    - assets/PREDICTIONS.json
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

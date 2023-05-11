@@ -5,6 +5,7 @@ import 'package:dep_college_app/Screens/food_order/main.dart';
 import 'package:dep_college_app/Screens/login.dart';
 import 'package:dep_college_app/Screens/orders/main.dart';
 import 'package:dep_college_app/Screens/prof.dart';
+import 'package:dep_college_app/Screens/seller/menu/history.dart';
 import 'package:dep_college_app/Screens/seller/menu/menu.dart';
 import 'package:dep_college_app/Screens/seller/menu/order.dart';
 import 'package:dep_college_app/Screens/welcome.dart';
@@ -45,6 +46,13 @@ class HomeScreenSeller extends StatefulWidget {
 class _HomeScreenSellerState extends State<HomeScreenSeller> {
   int currentTab = 0; // to keep track of active tab index
   Map<String, List<FoodItem>> _menu = {};
+  int ref = 0;
+
+  void _refresh() {
+    setState(() {
+      _changeTab(currentTab);
+    });
+  }
 
   List<int> tabColor = [0XFFFEFEE2, 0XFFFEFEE2, 0XFFFEFEE2, 0XFFFEFEE2];
 
@@ -63,18 +71,22 @@ class _HomeScreenSellerState extends State<HomeScreenSeller> {
     });
 
     if (currentTab == 0) {
-      FirebaseFirestore.instance.collection('outlets').doc(widget._selectedOutlet.toString()).collection('orders').where('status', isLessThan: 3).get().then((QuerySnapshot qs) {
+      FirebaseFirestore.instance
+          .collection('outlets')
+          .doc(widget._selectedOutlet.toString())
+          .collection('orders')
+          .where('status', isLessThan: 3)
+          .where('status', isGreaterThan: -1)
+          .get()
+          .then((QuerySnapshot qs) {
         List<Orderr> _orders = [];
         qs.docs.forEach((doc) {
           if (doc.exists) {
             List<FoodItem> _items = [];
             (doc["items"] as List).forEach((item) {
-              double p = item.values.first["Price"].toDouble();
-              List<String> av = [];
-              item.values.first["Available"].forEach((a) {
-                av.add(a.toString());
-              });
-              _items.add(FoodItem(name: item.keys.elementAt(0), price: p, availability: av, quantity: item.values.first["Quantity"]));
+              double p = item["Price"];
+
+              _items.add(FoodItem(name: item["Name"], price: p, availability: ["Breakfast", "Lunch", "Dinner"], quantity: item["Quantity"]));
             });
 
             _orders.add(Orderr(doc["orderid"], doc["phonenumber"], doc["custname"], _items, doc["status"]));
@@ -82,7 +94,11 @@ class _HomeScreenSellerState extends State<HomeScreenSeller> {
         });
 
         setState(() {
-          currentScreen = OrderSeller(widget._selectedOutlet, _changeAppBarTitle, _orders);
+          print(_orders);
+          if (currentTab == 0)
+            currentScreen = OrderSeller(widget._selectedOutlet, _changeAppBarTitle, _orders);
+          else
+            currentScreen = HistoryPage(widget._selectedOutlet, _changeAppBarTitle, _orders);
         });
       });
     } else if (currentTab == 1) {
@@ -119,12 +135,40 @@ class _HomeScreenSellerState extends State<HomeScreenSeller> {
           currentScreen = OutletMenuSeller(widget._selectedOutlet, _changeAppBarTitle, _menu);
         });
       });
-    } else if (currentTab == 2) {}
+    } else if (currentTab == 2) {
+      FirebaseFirestore.instance.collection('outlets').doc(widget._selectedOutlet.toString()).collection('orders').where('status', isEqualTo: 3).get().then((QuerySnapshot qs) {
+        List<Orderr> _orders = [];
+        qs.docs.forEach((doc) {
+          if (doc.exists) {
+            List<FoodItem> _items = [];
+            (doc["items"] as List).forEach((item) {
+              double p = item["Price"];
+
+              _items.add(FoodItem(name: item["Name"], price: p, availability: ["Breakfast", "Lunch", "Dinner"], quantity: item["Quantity"]));
+            });
+
+            _orders.add(Orderr(doc["orderid"], doc["phonenumber"], doc["custname"], _items, doc["status"]));
+          }
+        });
+
+        setState(() {
+          print(_orders);
+
+          currentScreen = HistoryPage(widget._selectedOutlet, _changeAppBarTitle, _orders);
+        });
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: Theme.of(context).primaryColor,
+            child: Icon(Icons.refresh),
+            onPressed: () {
+              _refresh();
+            }),
         appBar: AppBar(title: Text(widget.appBarTitle), backgroundColor: Theme.of(context).primaryColor, actions: [
           ElevatedButton(
             child: Text("Logout"),

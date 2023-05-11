@@ -1,11 +1,13 @@
+import "package:dep_college_app/Screens/food_order/qr.dart";
 import "package:dep_college_app/models/fooditem.dart";
 import "package:flutter/material.dart";
 
 class Cart extends StatefulWidget {
   Map<String, FoodItem> _cart;
   Function _setActualQuant;
+  String _selectedOutlet;
 
-  Cart(this._cart, this._setActualQuant);
+  Cart(this._cart, this._setActualQuant, this._selectedOutlet);
 
   @override
   State<Cart> createState() => _CartState();
@@ -37,7 +39,7 @@ class _CartState extends State<Cart> {
             Container(
               padding: EdgeInsets.symmetric(vertical: 30),
               child: Text(
-                'ORDER NUMBER X',
+                'CART',
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
             ),
@@ -167,7 +169,9 @@ class _CartState extends State<Cart> {
                   Text('Total : Rs.' + _calculateTotal().toString(), style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 30)),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(backgroundColor: widget._cart.length == 0 ? Colors.grey : Colors.red, shape: StadiumBorder(), fixedSize: Size(100, 50)),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Qr(widget._cart, widget._selectedOutlet)));
+                      },
                       child: Text(
                         'Order',
                       )),

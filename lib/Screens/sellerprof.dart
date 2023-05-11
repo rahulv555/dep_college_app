@@ -1,20 +1,31 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class Profile extends StatefulWidget {
+import 'package:dep_college_app/Screens/sales.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+class SellerProfile extends StatefulWidget {
   var _currentUser;
 
-  Profile(this._currentUser) {}
+  SellerProfile(this._currentUser) {}
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<SellerProfile> createState() => _SellerProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+Future<void> readJson() async {
+  final String response = await rootBundle.loadString('assets/PREDICTIONS.json');
+  final data = await json.decode(response);
+// ...
+}
+
+class _SellerProfileState extends State<SellerProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
+        title: Text('Profile'),
         elevation: 0,
         actions: [],
         backgroundColor: Theme.of(context).primaryColor,
@@ -23,7 +34,6 @@ class _ProfileState extends State<Profile> {
         Column(
           children: [
             Container(
-              height: 100,
               color: Theme.of(context).primaryColor,
             )
           ],
@@ -32,14 +42,9 @@ class _ProfileState extends State<Profile> {
             child: Column(
           children: [
             Container(
-              child: CircleAvatar(
-                backgroundColor: Colors.grey,
-                minRadius: 40,
-                child: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                  size: 150,
-                ),
+              child: Image(
+                image: AssetImage('assets/images/main-cafe.jpg'),
+                width: 500,
               ),
               alignment: Alignment.center,
             ),
@@ -91,31 +96,24 @@ class _ProfileState extends State<Profile> {
                     indent: 20,
                     endIndent: 20,
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Graduation Year : ',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                        Text(
-                          widget._currentUser['Gradyear'].toString(),
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(top: 30),
-              height: 230,
-              child: Image(
-                image: AssetImage('assets/images/bitebuddy_black.png'),
-              ),
+            // Container(
+            //   padding: EdgeInsets.only(top: 30),
+            //   height: 230,
+            //   child: Image(
+            //     image: AssetImage('assets/images/bitebuddy_black.png'),
+            //   ),
+            // )
+            ElevatedButton(
+              onPressed: () async {
+                final String response = await rootBundle.loadString('assets/PREDICTIONS.json');
+                final data = await json.decode(response);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Sales(widget._currentUser, data['items'])));
+              },
+              child: Text('Sales'),
+              style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor, minimumSize: Size(100, 50)),
             )
           ],
         )),
