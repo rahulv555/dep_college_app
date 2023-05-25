@@ -214,7 +214,7 @@ class _CouponHomeState extends State<CouponHome> {
           _sellCouponSheet(context);
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

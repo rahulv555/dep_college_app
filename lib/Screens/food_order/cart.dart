@@ -166,7 +166,7 @@ class _CartState extends State<Cart> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Total : Rs.' + _calculateTotal().toString(), style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 30)),
+                  Text('Total : Rs.' + _calculateTotal().toString(), style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 25)),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(backgroundColor: widget._cart.length == 0 ? Colors.grey : Colors.red, shape: StadiumBorder(), fixedSize: Size(100, 50)),
                       onPressed: () {
