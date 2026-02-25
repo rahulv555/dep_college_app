@@ -33,11 +33,7 @@ class _QrState extends State<Qr> {
       } else if (value.docs.first['status'] == 1) {
         List<Map> _items = [];
         widget._cart.forEach((key, value) {
-          _items.add({
-            'Name': key,
-            'Price': widget._cart[key]!.price,
-            'Quantity': widget._cart[key]!.quantity,
-          });
+          _items.add({'Name': key, 'Price': widget._cart[key]!.price, 'Quantity': widget._cart[key]!.quantity});
         });
         FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).collection('orders').add({
           "orderid": _orderid,
@@ -53,55 +49,56 @@ class _QrState extends State<Qr> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      backgroundColor: Theme.of(context).backgroundColor,
+      appBar: AppBar(backgroundColor: Theme.of(context).primaryColor),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
         child: Column(
           children: [
             Container(padding: EdgeInsets.only(top: 150), child: Image(image: new AssetImage('assets/images/qr.png'))),
             status == 0
                 ? ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor),
-                    onPressed: () {
-                      FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).get().then((value) {
-                        List<Map> _items = [];
-                        widget._cart.forEach((key, value) {
-                          _items.add({
-                            'Name': key,
-                            'Price': widget._cart[key]!.price,
-                            'Quantity': widget._cart[key]!.quantity,
-                          });
-                        });
-                        setState(() {
-                          _orderid = DateTime.now().toString();
-                          phonenumber = value["Phonenumber"];
-                          name = value["Name"];
-                        });
-                        FirebaseFirestore.instance.collection('outlets').doc(widget._selectedOutlet).collection('orders').add({
-                          "orderid": _orderid,
-                          "phonenumber": value['Phonenumber'],
-                          "custname": value["Name"],
-                          "items": _items,
-                          "status": 0,
-                          "custid": FirebaseAuth.instance.currentUser?.uid.toString(),
-                        }).then((value) {
-                          setState(() {
-                            status = 1;
-                          });
-                        });
+                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor),
+                  onPressed: () {
+                    FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).get().then((value) {
+                      List<Map> _items = [];
+                      widget._cart.forEach((key, value) {
+                        _items.add({'Name': key, 'Price': widget._cart[key]!.price, 'Quantity': widget._cart[key]!.quantity});
                       });
-                    },
-                    child: Text('Payment completed'))
-                : ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor),
-                    onPressed: () {
                       setState(() {
-                        status += 1;
+                        _orderid = DateTime.now().toString();
+                        phonenumber = value["Phonenumber"];
+                        name = value["Name"];
                       });
-                    },
-                    child: Text('Waiting for confirmation, click to refresh'))
+                      FirebaseFirestore.instance
+                          .collection('outlets')
+                          .doc(widget._selectedOutlet)
+                          .collection('orders')
+                          .add({
+                            "orderid": _orderid,
+                            "phonenumber": value['Phonenumber'],
+                            "custname": value["Name"],
+                            "items": _items,
+                            "status": 0,
+                            "custid": FirebaseAuth.instance.currentUser?.uid.toString(),
+                          })
+                          .then((value) {
+                            setState(() {
+                              status = 1;
+                            });
+                          });
+                    });
+                  },
+                  child: Text('Payment completed'),
+                )
+                : ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor),
+                  onPressed: () {
+                    setState(() {
+                      status += 1;
+                    });
+                  },
+                  child: Text('Waiting for confirmation, click to refresh'),
+                ),
           ],
         ),
       ),

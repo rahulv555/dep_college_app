@@ -27,29 +27,17 @@ class _SearchBarState extends State<SearchBar> {
                   decoration: InputDecoration(
                     fillColor: Color(0xFFF6F6F6),
                     filled: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide.none),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(50), borderSide: BorderSide.none),
                     hintText: 'Search',
                     hintStyle: TextStyle(color: Colors.grey, fontSize: 18),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Color(0xffBDBDBD),
-                    ),
+                    prefixIcon: Icon(Icons.search, color: Color(0xffBDBDBD)),
                     suffixIcon: IconButton(
                       iconSize: 20,
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    FilterCoupons(widget._filterCoupons)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => FilterCoupons(widget._filterCoupons)));
                       },
                       splashRadius: 1,
-                      icon: Icon(
-                        Icons.filter_alt_rounded,
-                        color: Theme.of(context).primaryColor,
-                      ),
+                      icon: Icon(Icons.filter_alt_rounded, color: Theme.of(context).primaryColor),
                     ),
 
                     // prefixIcon: Container(
@@ -72,12 +60,12 @@ class _SearchBarState extends State<SearchBar> {
               //       onPressed: () {},
               //       child: Icon(
               //         Icons.filter_alt_rounded,
-              //         color: Theme.of(context).backgroundColor,
+              //         color: Theme.of(context).scaffoldBackgroundColor,
               //       ),
               //     ),
               //     width: 50),
             ],
-          )
+          ),
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:dep_college_app/Screens/food_order/cart.dart';
 import 'package:dep_college_app/Screens/food_order/searchbar.dart';
 import 'package:dep_college_app/models/fooditem.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchBar;
 import 'dart:core';
 
 class OutletMenu extends StatefulWidget {
@@ -11,13 +11,7 @@ class OutletMenu extends StatefulWidget {
   Map<String, List<FoodItem>> _menu;
   Map<String, List<FoodItem>> _orimenu = {};
 
-  final List<String> _outlet_names = [
-    'CAFETARIA',
-    'HOTSPOT',
-    'JUICE CORNER',
-    'KERALA CANTEEN',
-    'COFFEE DAY',
-  ];
+  final List<String> _outlet_names = ['CAFETARIA', 'HOTSPOT', 'JUICE CORNER', 'KERALA CANTEEN', 'COFFEE DAY'];
 
   OutletMenu(this._selectedOutlet, this._selectView, this._changeAppBarTitle, this._menu) {
     print(this._menu.length);
@@ -81,159 +75,146 @@ class _OutletMenuState extends State<OutletMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body:
-          // height: 100,
-
-          Stack(children: [
-        Positioned(
+      // height: 100,
+      Stack(
+        children: [
+          Positioned(
             left: 0,
             right: 0,
             top: 140,
             bottom: 0,
             child: ListView.builder(
-                padding: EdgeInsets.only(top: 10),
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: widget._menu.length,
-                itemBuilder: (ctx, index) {
-                  String category = widget._menu.keys.elementAt(index);
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            category,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                          ),
-                        ),
-                        ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            physics: BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: widget._menu[category]!.length,
-                            itemBuilder: (c, i) {
-                              return Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                width: 5,
-                                child: Column(
-                                  children: [
-                                    Card(
-                                      elevation: 0,
-                                      color: Theme.of(context).backgroundColor,
-                                      child: Column(
+              padding: EdgeInsets.only(top: 10),
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: widget._menu.length,
+              itemBuilder: (ctx, index) {
+                String category = widget._menu.keys.elementAt(index);
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    children: [
+                      Container(padding: EdgeInsets.symmetric(vertical: 10), alignment: Alignment.centerLeft, child: Text(category, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
+                      ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        physics: BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: widget._menu[category]!.length,
+                        itemBuilder: (c, i) {
+                          return Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            width: 5,
+                            child: Column(
+                              children: [
+                                Card(
+                                  elevation: 0,
+                                  color: Theme.of(context).scaffoldBackgroundColor,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        child: FittedBox(
+                                          //fit: BoxFit.scaleDown,
+                                          child: Text(widget._menu[category]![i].name, style: TextStyle(fontSize: 20), textAlign: TextAlign.start),
+                                        ),
+                                      ),
+                                      Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Container(
-                                            child: FittedBox(
-                                              //fit: BoxFit.scaleDown,
-                                              child: Text(
-                                                widget._menu[category]![i].name,
-                                                style: TextStyle(fontSize: 20),
-                                                textAlign: TextAlign.start,
-                                              ),
-                                            ),
-                                          ),
-                                          Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  padding: EdgeInsets.only(top: 10),
-                                                  child: FittedBox(
-                                                    //fit: BoxFit.scaleDown,
-                                                    child: Text(
-                                                      'Rs.' + widget._menu[category]![i].price.toString(),
-                                                      textAlign: TextAlign.start,
-                                                      style: TextStyle(fontSize: 20),
-                                                    ),
-                                                  ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.only(top: 10),
+                                                child: FittedBox(
+                                                  //fit: BoxFit.scaleDown,
+                                                  child: Text('Rs.' + widget._menu[category]![i].price.toString(), textAlign: TextAlign.start, style: TextStyle(fontSize: 20)),
                                                 ),
+                                              ),
+                                            ],
+                                          ),
+                                          Container(
+                                            child: Column(
+                                              children: [
+                                                widget._menu[category]![i].quantity == 0
+                                                    ? ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                        backgroundColor: Theme.of(context).primaryColor,
+                                                        fixedSize: Size(165, 25),
+                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                                                      ),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _cart[widget._menu[category]![i].name] = widget._menu[category]![i];
+
+                                                          widget._menu[category]![i].quantity++;
+                                                          print(_cart);
+                                                        });
+                                                      },
+                                                      child: Text('Add'),
+                                                    )
+                                                    : ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                        backgroundColor: Theme.of(context).primaryColor,
+                                                        minimumSize: const Size(165, 25),
+                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                                      ),
+                                                      onPressed: () {},
+                                                      child: Row(
+                                                        children: [
+                                                          IconButton(
+                                                            icon: const Icon(Icons.remove),
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                widget._menu[category]![i].quantity--;
+                                                                if (_cart[widget._menu[category]![i].name]!.quantity == 0) {
+                                                                  _cart.remove(widget._menu[category]![i].name);
+                                                                  print(_cart);
+                                                                }
+                                                              });
+                                                            },
+                                                          ),
+                                                          Text(widget._menu[category]![i].quantity.toString()),
+                                                          IconButton(
+                                                            icon: const Icon(Icons.add),
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                widget._menu[category]![i].quantity++;
+                                                                print(_cart);
+                                                              });
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                // Checkbox(
+                                                //     shape: CircleBorder(),
+                                                //     value: false,
+                                                //     onChanged: (value) {})
                                               ],
                                             ),
-                                            Container(
-                                              child: Column(
-                                                children: [
-                                                  widget._menu[category]![i].quantity == 0
-                                                      ? ElevatedButton(
-                                                          style: ElevatedButton.styleFrom(
-                                                            backgroundColor: Theme.of(context).primaryColor,
-                                                            fixedSize: Size(150, 10),
-                                                            shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(50),
-                                                            ),
-                                                          ),
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              _cart[widget._menu[category]![i].name] = widget._menu[category]![i];
-
-                                                              widget._menu[category]![i].quantity++;
-                                                              print(_cart);
-                                                            });
-                                                          },
-                                                          child: Text('Add'))
-                                                      : ElevatedButton(
-                                                          style: ElevatedButton.styleFrom(
-                                                              backgroundColor: Theme.of(context).primaryColor,
-                                                              fixedSize: Size(150, 10),
-                                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100))),
-                                                          onPressed: () {},
-                                                          child: Row(
-                                                            children: [
-                                                              IconButton(
-                                                                icon: const Icon(Icons.remove),
-                                                                onPressed: () {
-                                                                  setState(() {
-                                                                    widget._menu[category]![i].quantity--;
-                                                                    if (_cart[widget._menu[category]![i].name]!.quantity == 0) {
-                                                                      _cart.remove(widget._menu[category]![i].name);
-                                                                      print(_cart);
-                                                                    }
-                                                                  });
-                                                                },
-                                                              ),
-                                                              Text(widget._menu[category]![i].quantity.toString()),
-                                                              IconButton(
-                                                                icon: const Icon(Icons.add),
-                                                                onPressed: () {
-                                                                  setState(() {
-                                                                    widget._menu[category]![i].quantity++;
-                                                                    print(_cart);
-                                                                  });
-                                                                },
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                  // Checkbox(
-                                                  //     shape: CircleBorder(),
-                                                  //     value: false,
-                                                  //     onChanged: (value) {})
-                                                ],
-                                              ),
-                                            )
-                                          ]),
+                                          ),
                                         ],
                                       ),
-                                    ),
-                                    Divider(
-                                      color: Theme.of(context).primaryColor,
-                                      thickness: 1,
-                                      indent: 20,
-                                      endIndent: 20,
-                                    )
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              );
-                            })
-                      ],
-                    ),
-                  );
-                })),
-        Positioned(
+                                Divider(color: Theme.of(context).primaryColor, thickness: 1, indent: 20, endIndent: 20),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          Positioned(
             top: 5,
             left: 0,
             right: 0,
@@ -247,40 +228,25 @@ class _OutletMenuState extends State<OutletMenu> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           IconButton(
-                              onPressed: () {
-                                widget._changeAppBarTitle('Food');
-                                widget._selectView(0);
-                              },
-                              icon: Icon(Icons.arrow_back)),
+                            onPressed: () {
+                              widget._changeAppBarTitle('Food');
+                              widget._selectView(0);
+                            },
+                            icon: Icon(Icons.arrow_back),
+                          ),
                         ],
                       ),
-                      Container(
-                        child: Text(
-                          'MENU',
-                          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                        ),
-                        alignment: Alignment.center,
-                      ),
+                      Container(child: Text('MENU', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)), alignment: Alignment.center),
                       Container(
                         padding: EdgeInsets.all(5),
                         child: CircleAvatar(
-                          backgroundColor: _cart.isEmpty ? Theme.of(context).backgroundColor : Theme.of(context).primaryColor,
+                          backgroundColor: _cart.isEmpty ? Theme.of(context).scaffoldBackgroundColor : Theme.of(context).primaryColor,
                           child: IconButton(
                             style: IconButton.styleFrom(),
-                            icon: Icon(
-                              Icons.shopping_cart,
-                              color: _cart.isEmpty ? Colors.black : Theme.of(context).backgroundColor,
-                            ),
+                            icon: Icon(Icons.shopping_cart, color: _cart.isEmpty ? Colors.black : Theme.of(context).scaffoldBackgroundColor),
                             onPressed: () {
                               if (_cart.isNotEmpty) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Cart(
-                                              _cart,
-                                              _setActualQuant,
-                                              widget._selectedOutlet.toString(),
-                                            )));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Cart(_cart, _setActualQuant, widget._selectedOutlet.toString())));
                               }
                             },
                           ),
@@ -291,8 +257,10 @@ class _OutletMenuState extends State<OutletMenu> {
                   SearchBar(_setMenuSearch),
                 ],
               ),
-            )),
-      ]),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

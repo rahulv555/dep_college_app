@@ -42,10 +42,7 @@ class _SearchBarState extends State<SearchBar> {
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(50), borderSide: BorderSide.none),
                     hintText: 'Search',
                     hintStyle: TextStyle(color: Colors.grey, fontSize: 18),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Color(0xffBDBDBD),
-                    ),
+                    prefixIcon: Icon(Icons.search, color: Color(0xffBDBDBD)),
                     // suffixIcon: IconButton(
                     //   iconSize: 20,
                     //   onPressed: () {
@@ -78,12 +75,12 @@ class _SearchBarState extends State<SearchBar> {
               //       onPressed: () {},
               //       child: Icon(
               //         Icons.filter_alt_rounded,
-              //         color: Theme.of(context).backgroundColor,
+              //         color: Theme.of(context).scaffoldBackgroundColor,
               //       ),
               //     ),
               //     width: 50),
             ],
-          )
+          ),
         ],
       ),
     );

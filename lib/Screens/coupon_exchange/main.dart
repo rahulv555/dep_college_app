@@ -8,13 +8,13 @@ import 'package:dep_college_app/Screens/coupon_exchange/searchbar.dart';
 import 'package:dep_college_app/models/coupon.dart';
 import 'package:dep_college_app/utilities/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchBar;
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 //import 'package:url_launcher/url_launcher.dart';
 //import 'package:url_launcher_web/url_launcher_web.dart';
-import 'package:whatsapp_share2/whatsapp_share2.dart';
+// import 'package:whatsapp_share2/whatsapp_share2.dart';
 // import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import './delete_alert.dart';
 
@@ -35,12 +35,7 @@ class CouponHome extends StatefulWidget {
 }
 
 class _CouponHomeState extends State<CouponHome> {
-  Map<Meal, String> meal_to_string = {
-    Meal.breakfast: 'Breakfast',
-    Meal.lunch: 'Lunch',
-    Meal.dinner: 'Dinner',
-    Meal.full: 'Full day',
-  };
+  Map<Meal, String> meal_to_string = {Meal.breakfast: 'Breakfast', Meal.lunch: 'Lunch', Meal.dinner: 'Dinner', Meal.full: 'Full day'};
   int _selectedView = 0;
   List<String> _image = ['assets/images/bhopal.jpeg', 'assets/images/kanaka.jpeg'];
 
@@ -63,7 +58,7 @@ class _CouponHomeState extends State<CouponHome> {
   Future<void> _createRoom(_phonenumber) async {
     print("lol");
     print("91" + _phonenumber);
-    await WhatsappShare.share(phone: "91" + _phonenumber, text: 'Hi!! I am interested in buying your coupon. Can i get more details?');
+    // await WhatsappShare.share(phone: "91" + _phonenumber, text: 'Hi!! I am interested in buying your coupon. Can i get more details?');
   }
 
   void _addCoupon(String cost, String date, String meal, String vendor) {
@@ -84,30 +79,36 @@ class _CouponHomeState extends State<CouponHome> {
 
     Meal type = meal_to_string.inverse[meal] as Meal;
 
-    FirebaseFirestore.instance.collection('coupons').add({
-      'cost': cost,
-      'discount': 0,
-      'dov': Timestamp.fromDate(dov),
-      'type': meal,
-      'phonenumber': widget._currentUser['Phonenumber'],
-      'quantity': 1,
-      'seller': FirebaseAuth.instance.currentUser?.uid,
-      'vendor': vendor,
-    }).then((value) {
-      setState(() {
-        widget.coupons.add(Coupon(
-            id: value.id,
-            cost: double.parse(cost),
-            discount: 0,
-            dov: dov,
-            quantity: 1,
-            type: type,
-            phonenumber: widget._currentUser['Phonenumber'],
-            seller: FirebaseAuth.instance.currentUser?.uid as String,
-            vendor: v));
-      });
-      return;
-    });
+    FirebaseFirestore.instance
+        .collection('coupons')
+        .add({
+          'cost': cost,
+          'discount': 0,
+          'dov': Timestamp.fromDate(dov),
+          'type': meal,
+          'phonenumber': widget._currentUser['Phonenumber'],
+          'quantity': 1,
+          'seller': FirebaseAuth.instance.currentUser?.uid,
+          'vendor': vendor,
+        })
+        .then((value) {
+          setState(() {
+            widget.coupons.add(
+              Coupon(
+                id: value.id,
+                cost: double.parse(cost),
+                discount: 0,
+                dov: dov,
+                quantity: 1,
+                type: type,
+                phonenumber: widget._currentUser['Phonenumber'],
+                seller: FirebaseAuth.instance.currentUser?.uid as String,
+                vendor: v,
+              ),
+            );
+          });
+          return;
+        });
   }
 
   void _editCoupon(String cost, String date, String meal, String vendor, int index) {
@@ -129,30 +130,35 @@ class _CouponHomeState extends State<CouponHome> {
 
     Meal type = meal_to_string.inverse[meal] as Meal;
 
-    FirebaseFirestore.instance.collection('coupons').doc(id).update({
-      'cost': cost,
-      'discount': 0,
-      'dov': Timestamp.fromDate(dov),
-      'type': meal,
-      'phonenumber': widget._currentUser['Phonenumber'],
-      'quantity': 1,
-      'seller': FirebaseAuth.instance.currentUser?.uid,
-      'vendor': vendor,
-    }).then((value) {
-      setState(() {
-        widget.coupons[index] = Coupon(
-            id: id,
-            cost: double.parse(cost),
-            discount: 0,
-            dov: dov,
-            quantity: 1,
-            type: type,
-            phonenumber: widget._currentUser['Phonenumber'],
-            seller: FirebaseAuth.instance.currentUser?.uid as String,
-            vendor: v);
-      });
-      return;
-    });
+    FirebaseFirestore.instance
+        .collection('coupons')
+        .doc(id)
+        .update({
+          'cost': cost,
+          'discount': 0,
+          'dov': Timestamp.fromDate(dov),
+          'type': meal,
+          'phonenumber': widget._currentUser['Phonenumber'],
+          'quantity': 1,
+          'seller': FirebaseAuth.instance.currentUser?.uid,
+          'vendor': vendor,
+        })
+        .then((value) {
+          setState(() {
+            widget.coupons[index] = Coupon(
+              id: id,
+              cost: double.parse(cost),
+              discount: 0,
+              dov: dov,
+              quantity: 1,
+              type: type,
+              phonenumber: widget._currentUser['Phonenumber'],
+              seller: FirebaseAuth.instance.currentUser?.uid as String,
+              vendor: v,
+            );
+          });
+          return;
+        });
   }
 
   void _deleteCoupon(int index) {
@@ -166,28 +172,22 @@ class _CouponHomeState extends State<CouponHome> {
 
   void _sellCouponSheet(BuildContext ctx) {
     showModalBottomSheet(
-        backgroundColor: Theme.of(context).backgroundColor,
-        context: ctx,
-        builder: (bCtx) {
-          return GestureDetector(
-            onTap: () {},
-            behavior: HitTestBehavior.opaque,
-            child: SellCoupon(_addCoupon),
-          );
-        });
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      context: ctx,
+      builder: (bCtx) {
+        return GestureDetector(onTap: () {}, behavior: HitTestBehavior.opaque, child: SellCoupon(_addCoupon));
+      },
+    );
   }
 
   void _editCouponSheet(BuildContext ctx, int index) {
     showModalBottomSheet(
-        backgroundColor: Theme.of(context).backgroundColor,
-        context: ctx,
-        builder: (bCtx) {
-          return GestureDetector(
-            onTap: () {},
-            behavior: HitTestBehavior.opaque,
-            child: EditCoupon(_editCoupon, index, widget.coupons[index]),
-          );
-        });
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      context: ctx,
+      builder: (bCtx) {
+        return GestureDetector(onTap: () {}, behavior: HitTestBehavior.opaque, child: EditCoupon(_editCoupon, index, widget.coupons[index]));
+      },
+    );
   }
 
   void _updateSelectedView(int opt) {
@@ -203,13 +203,10 @@ class _CouponHomeState extends State<CouponHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(
-          Icons.add,
-          color: Theme.of(context).backgroundColor,
-        ),
+        child: Icon(Icons.add, color: Theme.of(context).scaffoldBackgroundColor),
         onPressed: () {
           _sellCouponSheet(context);
         },
@@ -223,9 +220,10 @@ class _CouponHomeState extends State<CouponHome> {
             SelectView(_updateSelectedView),
             SearchBar(_filterCoupon),
             Container(
-                height: 600,
-                child: _selectedView == 0
-                    ? ListView.builder(
+              height: 600,
+              child:
+                  _selectedView == 0
+                      ? ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemBuilder: (ctx, index) {
@@ -233,18 +231,14 @@ class _CouponHomeState extends State<CouponHome> {
                             children: [
                               Card(
                                 elevation: 0,
-                                color: Theme.of(context).backgroundColor,
+                                color: Theme.of(context).scaffoldBackgroundColor,
                                 child: Row(
                                   children: [
                                     Container(
                                       margin: EdgeInsets.only(left: 30),
                                       width: 60,
                                       height: 60,
-                                      child: Image(
-                                        width: 50,
-                                        height: 50,
-                                        image: new AssetImage(widget.coupons[index].vendor == Vendor.bhopal ? _image[0] : _image[1]),
-                                      ),
+                                      child: Image(width: 50, height: 50, image: new AssetImage(widget.coupons[index].vendor == Vendor.bhopal ? _image[0] : _image[1])),
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(left: 10, right: 30),
@@ -253,17 +247,12 @@ class _CouponHomeState extends State<CouponHome> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                              style: TextStyle(fontWeight: FontWeight.bold),
-                                              (widget.coupons[index].vendor == Vendor.bhopal ? "Bhopal - " : "Kanaka - ") + meal_to_string[widget.coupons[index].type].toString()),
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                            (widget.coupons[index].vendor == Vendor.bhopal ? "Bhopal - " : "Kanaka - ") + meal_to_string[widget.coupons[index].type].toString(),
+                                          ),
                                           SizedBox(height: 10.0),
-                                          Text(
-                                            'Valid for : ' + DateFormat.yMd().format(widget.coupons[index].dov.add(Duration(days: 2))).toString(),
-                                            style: TextStyle(fontWeight: FontWeight.w500),
-                                          ),
-                                          Text(
-                                            'Sold by : ' + widget.coupons[index].phonenumber,
-                                            style: TextStyle(fontWeight: FontWeight.w500),
-                                          ),
+                                          Text('Valid for : ' + DateFormat.yMd().format(widget.coupons[index].dov.add(Duration(days: 2))).toString(), style: TextStyle(fontWeight: FontWeight.w500)),
+                                          Text('Sold by : ' + widget.coupons[index].phonenumber, style: TextStyle(fontWeight: FontWeight.w500)),
                                         ],
                                       ),
                                     ),
@@ -271,37 +260,27 @@ class _CouponHomeState extends State<CouponHome> {
                                       padding: EdgeInsets.only(top: 7, left: 10),
                                       child: Column(
                                         children: [
-                                          Text(
-                                            'Rs. ${widget.coupons[index].cost}',
-                                            style: TextStyle(color: Color(greenColor), fontWeight: FontWeight.bold),
-                                          ),
+                                          Text('Rs. ${widget.coupons[index].cost}', style: TextStyle(color: Color(greenColor), fontWeight: FontWeight.bold)),
                                           IconButton(
-                                              onPressed: () {
-                                                _createRoom(widget.coupons[index].phonenumber);
-                                              },
-                                              splashRadius: 20,
-                                              icon: Icon(
-                                                Icons.chat_bubble,
-                                                color: Theme.of(context).primaryColor,
-                                              )),
+                                            onPressed: () {
+                                              _createRoom(widget.coupons[index].phonenumber);
+                                            },
+                                            splashRadius: 20,
+                                            icon: Icon(Icons.chat_bubble, color: Theme.of(context).primaryColor),
+                                          ),
                                         ],
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
-                              Divider(
-                                color: Theme.of(context).primaryColor,
-                                thickness: 1,
-                                indent: 50,
-                                endIndent: 50,
-                              )
+                              Divider(color: Theme.of(context).primaryColor, thickness: 1, indent: 50, endIndent: 50),
                             ],
                           );
                         },
                         itemCount: widget.coupons.length,
                       )
-                    : ListView.builder(
+                      : ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemBuilder: (ctx, index) {
@@ -312,18 +291,14 @@ class _CouponHomeState extends State<CouponHome> {
                               children: [
                                 Card(
                                   elevation: 0,
-                                  color: Theme.of(context).backgroundColor,
+                                  color: Theme.of(context).scaffoldBackgroundColor,
                                   child: Row(
                                     children: [
                                       Container(
                                         margin: EdgeInsets.only(left: 30),
                                         width: 60,
                                         height: 60,
-                                        child: Image(
-                                          width: 50,
-                                          height: 50,
-                                          image: new AssetImage(widget.coupons[index].vendor == Vendor.bhopal ? _image[0] : _image[1]),
-                                        ),
+                                        child: Image(width: 50, height: 50, image: new AssetImage(widget.coupons[index].vendor == Vendor.bhopal ? _image[0] : _image[1])),
                                       ),
                                       Container(
                                         margin: EdgeInsets.only(left: 10, right: 30),
@@ -332,17 +307,12 @@ class _CouponHomeState extends State<CouponHome> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                                style: TextStyle(fontWeight: FontWeight.bold),
-                                                (widget.coupons[index].vendor == Vendor.bhopal ? "Bhopal - " : "Kanaka - ") + meal_to_string[widget.coupons[index].type].toString()),
+                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                              (widget.coupons[index].vendor == Vendor.bhopal ? "Bhopal - " : "Kanaka - ") + meal_to_string[widget.coupons[index].type].toString(),
+                                            ),
                                             SizedBox(height: 10.0),
-                                            Text(
-                                              'Valid for : ' + DateFormat.yMd().format(widget.coupons[index].dov.add(Duration(days: 2))).toString(),
-                                              style: TextStyle(fontWeight: FontWeight.w500),
-                                            ),
-                                            Text(
-                                              'Sold by : ' + widget.coupons[index].phonenumber,
-                                              style: TextStyle(fontWeight: FontWeight.w500),
-                                            ),
+                                            Text('Valid for : ' + DateFormat.yMd().format(widget.coupons[index].dov.add(Duration(days: 2))).toString(), style: TextStyle(fontWeight: FontWeight.w500)),
+                                            Text('Sold by : ' + widget.coupons[index].phonenumber, style: TextStyle(fontWeight: FontWeight.w500)),
                                           ],
                                         ),
                                       ),
@@ -350,49 +320,38 @@ class _CouponHomeState extends State<CouponHome> {
                                         padding: EdgeInsets.only(top: 7, left: 1),
                                         child: Column(
                                           children: [
-                                            Text(
-                                              'Rs. ${widget.coupons[index].cost}',
-                                              style: TextStyle(color: Color(greenColor), fontWeight: FontWeight.bold),
-                                            ),
+                                            Text('Rs. ${widget.coupons[index].cost}', style: TextStyle(color: Color(greenColor), fontWeight: FontWeight.bold)),
                                             Row(
                                               children: [
                                                 IconButton(
-                                                    onPressed: () {
-                                                      showMyDialog(context, index, _deleteCoupon);
-                                                    },
-                                                    splashRadius: 20,
-                                                    icon: Icon(
-                                                      Icons.delete_forever,
-                                                      color: Theme.of(context).primaryColor,
-                                                    )),
+                                                  onPressed: () {
+                                                    showMyDialog(context, index, _deleteCoupon);
+                                                  },
+                                                  splashRadius: 20,
+                                                  icon: Icon(Icons.delete_forever, color: Theme.of(context).primaryColor),
+                                                ),
                                                 IconButton(
-                                                    onPressed: () {
-                                                      _editCouponSheet(ctx, index);
-                                                    },
-                                                    splashRadius: 20,
-                                                    icon: Icon(
-                                                      Icons.edit,
-                                                      color: Theme.of(context).primaryColor,
-                                                    )),
+                                                  onPressed: () {
+                                                    _editCouponSheet(ctx, index);
+                                                  },
+                                                  splashRadius: 20,
+                                                  icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
+                                                ),
                                               ],
                                             ),
                                           ],
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
-                                Divider(
-                                  color: Theme.of(context).primaryColor,
-                                  thickness: 1,
-                                  indent: 50,
-                                  endIndent: 50,
-                                )
+                                Divider(color: Theme.of(context).primaryColor, thickness: 1, indent: 50, endIndent: 50),
                               ],
                             );
                         },
                         itemCount: widget.coupons.length,
-                      )),
+                      ),
+            ),
           ],
         ),
       ),

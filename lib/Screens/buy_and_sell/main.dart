@@ -12,8 +12,6 @@ class BuySellHome extends StatefulWidget {
 class _BuySellHomeState extends State<BuySellHome> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-    );
+    return Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor);
   }
 }

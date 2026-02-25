@@ -27,22 +27,13 @@ class _DetailsState extends State<Details> {
 
   String dropdownvalue = 'Item 1';
 
-  var items = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-  ];
+  var items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
 
   Widget _buildTF(String x, String y, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          x,
-          style: kLabelStyle,
-        ),
+        Text(x, style: kLabelStyle),
         SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
@@ -51,10 +42,7 @@ class _DetailsState extends State<Details> {
           child: TextField(
             controller: controller,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontFamily: 'OpenSans',
-            ),
+            style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'OpenSans'),
             decoration: InputDecoration(
               border: InputBorder.none,
               //contentPadding: EdgeInsets.only(top: 14.0),
@@ -71,10 +59,7 @@ class _DetailsState extends State<Details> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Enter Your Graduation Year',
-          style: kLabelStyle,
-        ),
+        Text('Enter Your Graduation Year', style: kLabelStyle),
         SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
@@ -83,15 +68,8 @@ class _DetailsState extends State<Details> {
           child: TextField(
             controller: _date,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Expected Graduation Year',
-              hintStyle: kHintTextStyle,
-            ),
+            style: TextStyle(color: Colors.white, fontFamily: 'OpenSans'),
+            decoration: InputDecoration(border: InputBorder.none, hintText: 'Expected Graduation Year', hintStyle: kHintTextStyle),
             //onTap: () async {
             // DateTime? pickedDate = await showDatePicker(
             //   context: context,
@@ -145,44 +123,45 @@ class _DetailsState extends State<Details> {
             setState(() {
               error = false;
             });
-            FirebaseAuth.instance.createUserWithEmailAndPassword(email: widget._email, password: widget._password).then((value) async {
-              print("Created new account");
-              await FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser?.uid)
-                  .set({})
-                  .then((value) => print('Created user ${FirebaseAuth.instance.currentUser?.uid}'))
-                  .catchError((error) => print(error));
-              print("Created new account again");
+            FirebaseAuth.instance
+                .createUserWithEmailAndPassword(email: widget._email, password: widget._password)
+                .then((value) async {
+                  print("Created new account");
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(FirebaseAuth.instance.currentUser?.uid)
+                      .set({})
+                      .then((value) => print('Created user ${FirebaseAuth.instance.currentUser?.uid}'))
+                      .catchError((error) => print(error));
+                  print("Created new account again");
 
-              await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).update({
-                "Name": _name.text,
-                "Phonenumber": _phonenumber.text,
-                "Gradyear": int.parse(_date.text),
-                "Balance": double.parse('0'),
-                "outlet": false,
-              }).then((value) {
-                print("Uers data added");
-                //  pos=0;
-                var _currentUser;
-                FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).get().then((DocumentSnapshot doc) {
-                  if (doc.exists) {
-                    _currentUser = doc.data();
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(FirebaseAuth.instance.currentUser?.uid)
+                      .update({"Name": _name.text, "Phonenumber": _phonenumber.text, "Gradyear": int.parse(_date.text), "Balance": double.parse('0'), "outlet": false})
+                      .then((value) {
+                        print("Uers data added");
+                        //  pos=0;
+                        var _currentUser;
+                        FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).get().then((DocumentSnapshot doc) {
+                          if (doc.exists) {
+                            _currentUser = doc.data();
 
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen(currentUser: _currentUser)));
-                    print(_currentUser);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen(currentUser: _currentUser)));
+                            print(_currentUser);
 
-                    // print(_userEvents);
-                  } else {
-                    print('Document does not exist on the database');
-                  }
+                            // print(_userEvents);
+                          } else {
+                            print('Document does not exist on the database');
+                          }
+                        });
+                      });
+                })
+                .onError((error, stackTrace) {
+                  print("Error ${error.toString()}");
                 });
-              });
-            }).onError((error, stackTrace) {
-              print("Error ${error.toString()}");
-            });
             print(_name.text);
             print(_phonenumber.text);
             print(dropdownvalue);
@@ -207,21 +186,10 @@ class _DetailsState extends State<Details> {
         style: ElevatedButton.styleFrom(
           elevation: 5.0,
           padding: EdgeInsets.all(15.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
           backgroundColor: Theme.of(context).primaryColor,
         ),
-        child: Text(
-          'SUBMIT',
-          style: TextStyle(
-            color: Theme.of(context).backgroundColor,
-            letterSpacing: 1.5,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
-          ),
-        ),
+        child: Text('SUBMIT', style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor, letterSpacing: 1.5, fontSize: 18.0, fontWeight: FontWeight.bold, fontFamily: 'OpenSans')),
       ),
     );
   }
@@ -309,7 +277,12 @@ class _DetailsState extends State<Details> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Theme.of(context).backgroundColor, Theme.of(context).backgroundColor, Theme.of(context).backgroundColor, Theme.of(context).backgroundColor],
+                    colors: [
+                      Theme.of(context).scaffoldBackgroundColor,
+                      Theme.of(context).scaffoldBackgroundColor,
+                      Theme.of(context).scaffoldBackgroundColor,
+                      Theme.of(context).scaffoldBackgroundColor,
+                    ],
                     stops: [0.1, 0.4, 0.7, 0.9],
                   ),
                 ),
@@ -318,22 +291,11 @@ class _DetailsState extends State<Details> {
                 height: double.infinity,
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 40.0,
-                    vertical: 120.0,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 120.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        'Fill Your Details',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontFamily: 'OpenSans',
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Text('Fill Your Details', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'OpenSans', fontSize: 30.0, fontWeight: FontWeight.bold)),
                       SizedBox(height: 30.0),
                       _buildTF('Name', 'Enter your Full Name', _name),
                       SizedBox(height: 30.0),
@@ -346,19 +308,11 @@ class _DetailsState extends State<Details> {
 
                       _buildSubmitButton(),
                       SizedBox(height: 30.0),
-                      Visibility(
-                        visible: error,
-                        child: Text('Please fill all the details properly',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'OpenSans',
-                            )),
-                      ),
+                      Visibility(visible: error, child: Text('Please fill all the details properly', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontFamily: 'OpenSans'))),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

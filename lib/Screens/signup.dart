@@ -18,10 +18,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Email',
-          style: kLabelStyle,
-        ),
+        Text('Email', style: kLabelStyle),
         SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
@@ -30,17 +27,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: TextField(
             controller: _emailtextcontroller,
             keyboardType: TextInputType.emailAddress,
-            style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontFamily: 'OpenSans',
-            ),
+            style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'OpenSans'),
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.email,
-                color: Theme.of(context).primaryColor,
-              ),
+              prefixIcon: Icon(Icons.email, color: Theme.of(context).primaryColor),
               hintText: 'Enter your Email',
               hintStyle: kHintTextStyle,
             ),
@@ -54,10 +45,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Set up your Password',
-          style: kLabelStyle,
-        ),
+        Text('Set up your Password', style: kLabelStyle),
         SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
@@ -66,17 +54,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: TextField(
             controller: _passwordtextcontroller,
             obscureText: true,
-            style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontFamily: 'OpenSans',
-            ),
+            style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'OpenSans'),
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.lock,
-                color: Theme.of(context).primaryColor,
-              ),
+              prefixIcon: Icon(Icons.lock, color: Theme.of(context).primaryColor),
               hintText: 'Enter your Password',
               hintStyle: kHintTextStyle,
             ),
@@ -104,42 +86,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
         style: ElevatedButton.styleFrom(
           elevation: 5.0,
           padding: EdgeInsets.all(15.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
           backgroundColor: Theme.of(context).primaryColor,
         ),
-        child: Text(
-          'Sign Up',
-          style: TextStyle(
-            color: Theme.of(context).backgroundColor,
-            letterSpacing: 1.5,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
-          ),
-        ),
+        child: Text('Sign Up', style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor, letterSpacing: 1.5, fontSize: 18.0, fontWeight: FontWeight.bold, fontFamily: 'OpenSans')),
       ),
     );
   }
 
   Widget _buildSignInWithText() {
-    return Column(
-      children: <Widget>[
-        Text(
-          '- OR -',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        SizedBox(height: 20.0),
-        Text(
-          'Sign Up with',
-          style: kLabelStyle,
-        ),
-      ],
-    );
+    return Column(children: <Widget>[Text('- OR -', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400)), SizedBox(height: 20.0), Text('Sign Up with', style: kLabelStyle)]);
   }
 
   Widget _buildSocialBtn(Function onTap, AssetImage logo) {
@@ -151,17 +107,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              offset: Offset(0, 2),
-              blurRadius: 6.0,
-            ),
-          ],
-          image: DecorationImage(
-            image: logo,
-            fit: BoxFit.cover,
-          ),
+          boxShadow: [BoxShadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 6.0)],
+          image: DecorationImage(image: logo, fit: BoxFit.cover),
         ),
       ),
     );
@@ -170,17 +117,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildSocialBtnRow() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _buildSocialBtn(
-            () => print('Sign Up with Google'),
-            AssetImage(
-              'assets/logos/google.png',
-            ),
-          ),
-        ],
-      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[_buildSocialBtn(() => print('Sign Up with Google'), AssetImage('assets/logos/google.png'))]),
     );
   }
 
@@ -200,7 +137,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Theme.of(context).backgroundColor, Theme.of(context).backgroundColor, Theme.of(context).backgroundColor, Theme.of(context).backgroundColor],
+                    colors: [
+                      Theme.of(context).scaffoldBackgroundColor,
+                      Theme.of(context).scaffoldBackgroundColor,
+                      Theme.of(context).scaffoldBackgroundColor,
+                      Theme.of(context).scaffoldBackgroundColor,
+                    ],
                     stops: [0.1, 0.4, 0.7, 0.9],
                   ),
                 ),
@@ -209,27 +151,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: double.infinity,
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 40.0,
-                    vertical: 120.0,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 120.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontFamily: 'OpenSans',
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Text('Sign Up', style: TextStyle(color: Theme.of(context).primaryColor, fontFamily: 'OpenSans', fontSize: 30.0, fontWeight: FontWeight.bold)),
                       SizedBox(height: 30.0),
                       _buildEmailTF(),
-                      SizedBox(
-                        height: 30.0,
-                      ),
+                      SizedBox(height: 30.0),
                       _buildPasswordTF(),
                       //_buildForgotPasswordBtn(),
                       //_buildRememberMeCheckbox(),
@@ -240,7 +169,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

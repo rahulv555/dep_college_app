@@ -13,42 +13,28 @@ class MainDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Theme.of(context).backgroundColor,
-      child: Column(children: [
-        Container(
-          height: 120,
-          width: double.infinity,
-          padding: EdgeInsets.all(20),
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'Hello, ${_currentUser?['Name']}',
-            style: TextStyle(fontStyle: FontStyle.italic, fontSize: 30, color: Theme.of(context).primaryColor),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      child: Column(
+        children: [
+          Container(
+            height: 120,
+            width: double.infinity,
+            padding: EdgeInsets.all(20),
+            alignment: Alignment.centerLeft,
+            child: Text('Hello, ${_currentUser?['Name']}', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 30, color: Theme.of(context).primaryColor)),
           ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        // ListTile(
-        //   leading: Icon(Icons.settings, size: 26),
-        //   title: Text('Settings'),
-        //   onTap: () {},
-        // ),
-        Theme(
-          data: ThemeData(
-            splashColor: Colors.blue[100],
-            highlightColor: Colors.blue.withOpacity(.5),
+          SizedBox(height: 20),
+          // ListTile(
+          //   leading: Icon(Icons.settings, size: 26),
+          //   title: Text('Settings'),
+          //   onTap: () {},
+          // ),
+          Theme(
+            data: ThemeData(splashColor: Colors.blue[100], highlightColor: Colors.blue.withOpacity(.5)),
+            child: ListTile(leading: Icon(Icons.settings, size: 26), title: Text("Settings"), onTap: () {}),
           ),
-          child: ListTile(
-            leading: Icon(Icons.settings, size: 26),
-            title: Text("Settings"),
-            onTap: () {},
-          ),
-        ),
-        Theme(
-            data: ThemeData(
-              splashColor: Colors.blue[100],
-              highlightColor: Colors.blue.withOpacity(.5),
-            ),
+          Theme(
+            data: ThemeData(splashColor: Colors.blue[100], highlightColor: Colors.blue.withOpacity(.5)),
             child: ListTile(
               leading: Icon(Icons.man, size: 26),
               title: Text("Profile"),
@@ -60,8 +46,10 @@ class MainDrawer extends StatelessWidget {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => SellerProfile(_currentUser)));
                 }
               },
-            ))
-      ]),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

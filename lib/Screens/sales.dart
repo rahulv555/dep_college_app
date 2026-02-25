@@ -31,41 +31,41 @@ class _SalesState extends State<Sales> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text('Sales'),
-      ),
+      appBar: AppBar(backgroundColor: Theme.of(context).primaryColor, title: Text('Sales')),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         child: Column(
           children: [
             Container(
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text(
-                  'Item',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                Text('Expected Demand', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
-              ]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Text('Item', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)), Text('Expected Demand', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))],
+              ),
             ),
             Container(
-                padding: EdgeInsets.only(top: 20),
-                height: 600,
+              padding: EdgeInsets.only(top: 20),
+              height: 600,
 
-                // SelectView(_updateSelectedView),
-                child: Container(
-                  child: ListView.builder(
-                    itemCount: widget.data.length,
-                    itemBuilder: (context, index) => Container(
-                      child: Card(
-                          color: Theme.of(context).backgroundColor,
-                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                            Text(widget.data[index].keys.first.toString(), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
-                            Text(widget.data[index][widget.data[index].keys.first.toString()].toString().split('.')[0], style: TextStyle(fontSize: 15))
-                          ])),
-                    ),
-                  ),
-                )),
+              // SelectView(_updateSelectedView),
+              child: Container(
+                child: ListView.builder(
+                  itemCount: widget.data.length,
+                  itemBuilder:
+                      (context, index) => Container(
+                        child: Card(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(widget.data[index].keys.first.toString(), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+                              Text(widget.data[index][widget.data[index].keys.first.toString()].toString().split('.')[0], style: TextStyle(fontSize: 15)),
+                            ],
+                          ),
+                        ),
+                      ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

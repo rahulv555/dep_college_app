@@ -14,9 +14,6 @@ class ChatHome extends StatefulWidget {
 class _ChatHomeState extends State<ChatHome> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Container(),
-    );
+    return Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor, body: Container());
   }
 }

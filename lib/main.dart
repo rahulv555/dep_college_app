@@ -25,7 +25,7 @@ class _MyAppState extends State<MyApp> {
         // Define the default brightness and colors.
         // brightness: Brightness.dark,
         primaryColor: Color(greenColor),
-        backgroundColor: creamColor,
+        scaffoldBackgroundColor: creamColor,
 
         // Define the default font family.
         // fontFamily: 'Georgia',
