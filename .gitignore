@@ -47,3 +47,8 @@ app.*.map.json
 .fvm/
 
 .venv/
+
+
+prediction_model/salesdata1.csv
+prediction_model/salesdata2.csv
+prediction_model/total_data.csv
