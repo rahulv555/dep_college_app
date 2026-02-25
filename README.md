@@ -1,16 +1,23 @@
-# dep_college_app
+# Food ordering, Coupon exchanging App with Food demand forecasting
 
-A new Flutter project.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## How to start
 
-A few resources to get you started if this is your first Flutter project:
+### For Flutter app
+GOOGLE API KEY - add google-service.json to android/app
+flutter pub get
+flutter run
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### For food demand forecasting
+In prediction_model directory
+1. pip install -r requirements.txt
+2. Run data_setup.ipynb to create total_data.csv
+3. Run demand_forecasting.ipynb
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+
+
+
+
