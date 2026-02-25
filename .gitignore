@@ -42,6 +42,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/src/google-services.json
 
 # FVM Version Cache
 .fvm/
@@ -52,3 +53,4 @@ app.*.map.json
 prediction_model/salesdata1.csv
 prediction_model/salesdata2.csv
 prediction_model/total_data.csv
+
