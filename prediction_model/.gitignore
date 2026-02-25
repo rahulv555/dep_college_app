@@ -1,4 +1,4 @@
 .venv
-salesdata1.csv
-salesdata2.csv
-total_data.csv
+./salesdata1.csv
+./salesdata2.csv
+./total_data.csv
