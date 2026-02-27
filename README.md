@@ -78,12 +78,12 @@ The dataset consolidates the sales on a week-by-week basis(not daily)
 There was no null data, and only a few outliers had to be removed
 
 ### Feature Engineering
--- The number of orders, base price and checkout price were normalized using log(1+x)
--- New columns such as discount, discount ratio were added, as these could affect demand on a day
--- Column price_last_curr_diff was added, which is the difference in price from last day
--- Lag features on number of orders from 10th, 11th and 12th previous week were added
--- Exponentially weighted mean features with shifts from 10-15 weeks were added
--- Encoding of categorical variables was only done for models other than CatBoost, as it takes care of these and null values on its own
+-- The number of orders, base price and checkout price were normalized using log(1+x)  
+-- New columns such as discount, discount ratio were added, as these could affect demand on a day  
+-- Column price_last_curr_diff was added, which is the difference in price from last day  
+-- Lag features on number of orders from 10th, 11th and 12th previous week were added  
+-- Exponentially weighted mean features with shifts from 10-15 weeks were added  
+-- Encoding of categorical variables was only done for models other than CatBoost, as it takes care of these and null values on its own  
 
 
 ### Model Comparison
@@ -91,6 +91,7 @@ There was no null data, and only a few outliers had to be removed
 Models used - CatBoost, LightGBM, GradientBoost, RandomForest, DecisionTree
 
 Metric used for comparison - RMSLE/MSLE (Mean Squared Logarithmic Error)
+
 <img width="434" height="83" alt="msle" src="https://github.com/user-attachments/assets/69cbd2a6-249e-4df7-9df3-b2c1769630de" />
 
 
